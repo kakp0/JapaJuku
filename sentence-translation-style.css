@@ -1,0 +1,234 @@
+/* --- Base Styles & Layout --- */
+/* This file is adapted from sentence-rewriting-style.css for consistency */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    min-height: 100vh;
+    background-color: var(--bg-color);
+    margin: 0;
+    color: var(--text-color);
+    box-sizing: border-box;
+    transition: background-color 0.3s, color 0.3s;
+    overflow-x: hidden;
+}
+
+#app-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    max-width: 95vw;
+    background-color: var(--card-bg-color); 
+    padding: 2rem; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+    text-align: center; 
+    box-sizing: border-box;
+}
+
+#profile-card {
+    position: absolute;
+    top: 50%;
+    left: calc((50vw - 400px) / 2); /* Aligns it left of the main container */
+    transform: translate(-50%, -50%);
+    width: 320px;
+    z-index: 10;
+}
+
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.back-link {
+    text-decoration: none;
+    color: var(--subtle-text-color);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s ease;
+}
+
+.back-link:hover {
+    color: var(--interactive-color);
+}
+
+h1 { margin: 0 0 0.25rem 0; color: var(--heading-color); }
+.subtitle { margin: 0 0 2rem 0; color: var(--subtle-text-color); }
+
+/* --- Dark Mode Toggle --- */
+.theme-switcher-wrapper { display: flex; align-items: center; gap: 0.75rem; color: var(--subtle-text-color); }
+.theme-switcher { position: relative; display: inline-block; width: 50px; height: 28px; }
+.theme-switcher input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 28px; }
+.slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: var(--interactive-color); }
+input:checked + .slider:before { transform: translateX(22px); }
+
+/* --- Quiz Area --- */
+#prompt-area {
+    margin-bottom: 2rem;
+}
+
+#sentence-prompt-card {
+    background-color: var(--card-alt-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 1.5rem;
+}
+
+#sentence-tag {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--subtle-text-color);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+#japanese-sentence-display {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--heading-color);
+    margin: 0;
+    line-height: 1.4;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#japanese-sentence-display ruby {
+    ruby-position: over;
+}
+
+#japanese-sentence-display ruby rt {
+    position: relative;
+    bottom: 0.5em; /* Lifts the furigana without lowering the kanji */
+}
+
+/* --- Answer Area --- */
+#answer-area {
+    margin-bottom: 1rem;
+}
+
+#answer-input {
+    width: 100%; /* CHANGED: Makes the input fill its container */
+    box-sizing: border-box; /* ADDED: Ensures padding doesn't add to the width */
+    max-width: 600px;
+    padding: 1rem;
+    font-size: 1.5rem;
+    text-align: center;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--card-bg-color);
+    color: var(--text-color);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    outline: none;
+}
+
+#answer-input:focus {
+    border-color: var(--interactive-color);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+#feedback-area {
+    min-height: 50px;
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.feedback-card {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+}
+.feedback-card.correct {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+.feedback-card.incorrect {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+:root.dark-mode .feedback-card.correct {
+    background-color: #2a4c33;
+    color: #c3e6cb;
+    border-color: #3e5e46;
+}
+:root.dark-mode .feedback-card.incorrect {
+    background-color: #5a2a2e;
+    color: #f5c6cb;
+    border-color: #8c3a41;
+}
+
+#controls {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+button { 
+    padding: 0.75rem 1.5rem; 
+    font-size: 1rem; border: none; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    background-color: var(--interactive-color); 
+    color: white; 
+    font-weight: 600; 
+    transition: all 0.2s ease;
+    min-width: 120px;
+}
+button:hover { background-color: var(--interactive-hover-color); }
+button:active { transform: scale(0.98); }
+button:disabled { background-color: #ced4da; cursor: not-allowed; }
+#next-btn { background-color: #28a745; }
+#next-btn:hover { background-color: #218838; }
+
+/* --- Media Queries --- */
+@media (max-width: 1250px) {
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 2rem;
+        padding: 2rem 1rem;
+        height: auto;
+        overflow-y: auto;
+    }
+
+    #app-container, #profile-card {
+        position: static;
+        transform: none;
+        left: auto;
+        top: auto;
+        width: 100%;
+        max-width: 800px;
+    }
+}
+
+@media (max-width: 680px) {
+    #app-container { padding: 1.5rem 1rem; }
+    h1 { font-size: 1.5rem; }
+    .subtitle { font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+    #japanese-sentence-display {
+        font-size: 1.4rem;
+    }
+    #answer-input {
+        /* REMOVED the width: 95% rule to inherit the 100% width from the base style */
+        font-size: 1.2rem;
+    }
+}

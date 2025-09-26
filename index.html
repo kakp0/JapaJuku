@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JapaJuku</title>
+    <!-- Anti-flicker theme script -->
+    <script>
+        (function() {
+            try {
+                var theme = localStorage.getItem('japaneseLearnerTheme');
+                // Default to dark mode if no theme is set, or if dark is set.
+                // Only stay in light mode if 'light' is explicitly saved.
+                if (theme !== 'light') {
+                    document.documentElement.classList.add('dark-mode');
+                }
+            } catch (e) {}
+        })();
+    </script>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<!-- The dark-mode class may be added here by the script above -->
+<body>
+    <div class="page-transition"></div>
+
+    <div id="main-layout">
+        <!-- Left Column: Main Content -->
+        <div id="home-container">
+            <header class="home-header">
+                <div>
+                    <h1>ジャパじゅく</h1>
+                    <h2>JapaJuku | Final Exam Practice</h2>
+                </div>
+                <!-- Dark Mode Toggle -->
+                <div class="theme-switcher-wrapper">
+                    <i class="ph-bold ph-moon"></i>
+                    <label class="theme-switcher">
+                        <input type="checkbox" id="theme-toggle">
+                        <span class="slider"></span>
+                    </label>
+                    <i class="ph-bold ph-sun"></i>
+                </div>
+            </header>
+
+            <div class="practice-grid">
+                <!-- NOTE: I've wrapped the text in a div for better mobile styling -->
+                <a href="conjugation-practice.html" class="practice-card">
+                    <i class="ph-bold ph-translate"></i>
+                    <div>
+                        <h3>Conjugation Practice</h3>
+                        <p>Master causative, causative-passive, and conditional ば forms.</p>
+                    </div>
+                </a>
+                <a href="sentence-completion.html" class="practice-card">
+                    <i class="ph-bold ph-puzzle-piece"></i>
+                    <div>
+                        <h3>Sentence Completion</h3>
+                        <p>Fill in the blanks with the right particles and expressions.</p>
+                    </div>
+                </a>
+                <a href="sentence-rewriting.html" class="practice-card">
+                    <i class="ph-bold ph-pencil-line"></i>
+                    <div>
+                        <h3>Sentence Rewriting</h3>
+                        <p>Practice rewriting sentences using different viewpoints.</p>
+                    </div>
+                </a>
+                <a href="kanji-practice.html" class="practice-card">
+                    <i class="ph-bold ph-paint-brush"></i>
+                    <div>
+                        <h3>Kanji Practice</h3>
+                        <p>Practice writing and reading L22 and L23 Kanji.</p>
+                    </div>
+                </a>
+                <a href="sentence-translation.html" class="practice-card">
+                    <i class="ph-bold ph-chat-centered-text"></i>
+                    <div>
+                        <h3>Sentence Translation</h3>
+                        <p>Translate Japanese sentences back into English.</p>
+                    </div>
+                </a>
+                <a href="written-passage.html" class="practice-card">
+                    <i class="ph-bold ph-books"></i>
+                    <div>
+                        <h3>Written Passage</h3>
+                        <p>Build your written passage to memorise before the exam.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Right Column: Profile and Titles -->
+        <div id="side-panel">
+            <div id="profile-card">
+                <div class="profile-header">
+                    <!-- UPDATED: Profile picture is now a div for customization -->
+                    <div class="pfp-wrapper">
+                        <div id="profile-picture" title="Customize your profile picture"></div>
+                        <div id="pfp-color-picker" class="hidden">
+                            <div class="color-input-group">
+                                <label for="pfp-bg-color">Background</label>
+                                <input type="color" id="pfp-bg-color">
+                            </div>
+                            <div class="color-input-group">
+                                <label for="pfp-text-color">Letter</label>
+                                <input type="color" id="pfp-text-color">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-info">
+                        <div class="player-name-wrapper">
+                            <h3 id="player-name" contenteditable="true">Learner</h3>
+                            <i class="ph ph-pencil-simple"></i>
+                        </div>
+                        <p id="player-title">Newbie</p>
+                    </div>
+                </div>
+                <div class="level-system">
+                    <div class="level-display">
+                        <span>Level <span id="level-number">1</span></span>
+                        <span id="xp-counter">0 / 100 XP</span>
+                    </div>
+                    <div class="xp-bar-container">
+                        <div id="xp-bar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="titles-container">
+                <h2><i class="ph-bold ph-trophy"></i> Titles & Achievements</h2>
+                <ul id="titles-list"></ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification-container"></div>
+
+    <!-- First Time User Popup -->
+    <div id="welcome-overlay" class="hidden">
+        <div id="welcome-popup">
+            <h1>ジャパじゅくへようこそ!!</h1>
+            <p class="disclaimer">
+                This website is still in very early stages of development, as a temporary measure all example "sentences" have been generated using AI (Gemini 2.5 Pro). 
+                This was built in under 24 hours so while I'm confident there shouldn't be too many mistakes I can't guarantee there won't be some, so <strong>PROCEED WITH CAUTION</strong>.
+            </p>
+            <p class="disclaimer">
+                Any and all feedback would be greatly appreciated!! Message me on Discord @kakpo, send me an email wayetha@myvuw.ac.nz, or just come tell me in class
+                &lt;(￣︶￣)&gt; 
+            </p>
+            <p class="disclaimer">(For ideal user-experience, use a PC or Laptop!)</p>
+            <div class="username-input-container">
+                <label for="username-input">Enter a username</label>
+                <input type="text" id="username-input" placeholder="e.g. 日本語マスター">
+                <button id="welcome-submit-btn" disabled>行こう!</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,360 @@
+/* --- Desktop Layout --- */
+
+#app-container {
+    max-width: 1200px;
+    width: 90%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(calc(-50% - 100px), -50%); /* Shifts left to make space for profile card */
+}
+
+#profile-card {
+    position: fixed;
+    left: auto;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
+#passage-layout {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.main-content {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.instructions {
+    flex: 1;
+    text-align: left;
+    padding: 1.5rem;
+    background-color: var(--card-alt-bg-color);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    min-width: 300px; 
+}
+
+.instructions h2 {
+    font-size: 1.1rem;
+    color: var(--heading-color);
+    margin-bottom: 1rem;
+}
+
+.instructions p, .instructions li {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+.instructions p {
+    margin-bottom: 1.5rem;
+}
+
+.instructions h3 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--subtle-text-color);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.instructions ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0 0 1.5rem 0;
+}
+
+.instructions li {
+    margin-bottom: 0.75rem;
+}
+
+.length-note {
+    font-size: 0.85rem;
+    text-align: center;
+    color: var(--subtle-text-color);
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+#writing-area {
+    position: relative;
+    cursor: text;
+    width: 100%;
+}
+
+#passage-grid {
+    display: grid;
+    grid-template-columns: repeat(15, 1fr);
+    border-top: 1.5px solid var(--subtle-text-color);
+    border-left: 1.5px solid var(--subtle-text-color);
+    background-color: var(--card-bg-color);
+    aspect-ratio: 15 / 11;
+}
+
+.grid-cell {
+    border-right: 1.5px solid var(--subtle-text-color);
+    border-bottom: 1.5px solid var(--subtle-text-color);
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 0;
+    font-size: clamp(0.7rem, 2.2vw, 1.4rem); 
+    position: relative;
+    color: var(--text-color);
+    font-family: "Yu Gothic", "Meiryo", sans-serif;
+    overflow: hidden;
+    white-space: pre;
+}
+
+.grid-cell.cursor::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 10%;
+    width: 2px;
+    height: 80%;
+    background-color: var(--interactive-color);
+    animation: blink 1.1s step-end infinite;
+}
+
+@keyframes blink {
+  from, to { background-color: transparent; }
+  50% { background-color: var(--interactive-color); }
+}
+
+#hidden-textarea {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    caret-color: transparent;
+    resize: none;
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    font-family: "Yu Gothic", "Meiryo", sans-serif;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+}
+
+#char-counter {
+    font-weight: 600;
+    font-family: monospace;
+    font-size: 1.1rem;
+    color: var(--subtle-text-color);
+    transition: color 0.3s ease;
+}
+
+.instructions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#toggle-instructions {
+    display: none; /* Hide toggle button on desktop */
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+/* --- NEW: Styles for Grid Footer and Copy Button --- */
+.grid-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+#copy-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--card-alt-bg-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#copy-button:hover {
+    background-color: var(--hover-color);
+    border-color: var(--interactive-color);
+    color: var(--heading-color);
+}
+
+#copy-button i {
+    font-size: 1.2rem;
+}
+
+/* State when text is copied */
+#copy-button.copied {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: #ffffff;
+}
+
+
+/* --- Tablet & Mobile Responsiveness --- */
+@media (max-width: 1400px) {
+    #app-container {
+        position: static;
+        transform: none;
+        margin: 2rem auto;
+    }
+
+    #passage-layout {
+        flex-direction: column;
+        align-items: center; /* Center stacked items */
+    }
+
+    /* Ensure both main sections take up full width but don't over-stretch */
+    .main-content {
+        width: 100%;
+        max-width: 600px;
+    }
+    
+    .instructions {
+        width: 100%;
+        min-width: auto;
+        max-width: 600px;
+    }
+    
+    #profile-card {
+        position: static;
+        transform: none;
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto 2rem;
+    }
+}
+
+/* --- Mobile-Specific Portrait Design --- */
+@media (max-width: 800px) {
+    body {
+        padding: 0 1rem;
+    }
+
+    #app-container {
+        width: 100%;
+        margin: 1.5rem 0;
+    }
+    
+    .app-header {
+        margin-bottom: 1.5rem;
+    }
+
+    /* Constrain content width and fix box model to prevent overflow */
+    .main-content, .instructions {
+        width: 100%;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+        box-sizing: border-box; /* This is the fix: ensures padding is included in the width */
+    }
+
+    /* Adjust grid for portrait view (10x15) */
+    #passage-grid {
+        grid-template-columns: repeat(10, 1fr);
+        aspect-ratio: 10 / 15;
+    }
+
+    /* Adjust font size in the grid for the new dimensions */
+    .grid-cell {
+        font-size: clamp(0.7rem, 3vw, 1.4rem);
+    }
+
+    .main-content h1 {
+        font-size: 1.4rem;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .instructions {
+        padding: 1rem 1.25rem;
+        margin-top: 2rem; /* Add space between the grid area and the accordion */
+    }
+    
+    /* Instructions Accordion Logic for Mobile */
+    .instructions-header {
+        cursor: pointer;
+    }
+
+    .instructions h2 {
+        font-size: 1.0rem;
+        margin-bottom: 0; 
+    }
+    
+    #toggle-instructions {
+        display: block; /* Show button on mobile */
+    }
+    
+    .instructions.is-open #toggle-instructions {
+        transform: rotate(180deg);
+    }
+
+    .instructions-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease-out;
+        padding-top: 0;
+    }
+    
+    .instructions.is-open .instructions-content {
+        max-height: 60vh; 
+        overflow-y: auto;
+        transition: max-height 0.5s ease-in;
+        padding-top: 1rem;
+    }
+}
+
+/* Page transition animations */
+.page-transition::after {
+    width: 51%;
+}
+
+@keyframes fadeInCardWithDelay {
+  0% { opacity: 0; }
+  37.5% { opacity: 0; } 
+  100% { opacity: 1; }
+}
+
+@keyframes fadeOutCardWithDelay {
+  0% { opacity: 1; }
+  47.5% { opacity: 1; } 
+  57.5% { opacity: 0; } 
+  100% { opacity: 0; }
+}
+
+body:not(.is-leaving) #profile-card {
+  animation: fadeInCardWithDelay 0.8s ease forwards;
+}
+
+body.is-leaving #profile-card {
+  animation: fadeOutCardWithDelay 0.8s ease forwards;
+}
