@@ -60,7 +60,45 @@ document.addEventListener('DOMContentLoaded', () => {
         const handleSelectChange = (e) => { const [lessonIdx, kanjiIdx] = e.target.value.split('-').map(Number); currentLessonIndex = lessonIdx; currentKanjiInLessonIndex = kanjiIdx; loadKanji(); };
         const clearDrawingCanvas = () => drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
         const nextKanji = () => { currentKanjiInLessonIndex++; if (currentKanjiInLessonIndex >= lessons[currentLessonIndex].kanji.length) { currentKanjiInLessonIndex = 0; currentLessonIndex = (currentLessonIndex + 1) % lessons.length; } loadKanji(); };
-        const gradeDrawing = () => { const guideData = guideCtx.getImageData(0, 0, guideCanvas.width, guideCanvas.height).data, drawingData = drawingCtx.getImageData(0, 0, drawingCanvas.width, drawingCanvas.height).data; let templatePixels = 0, userPixels = 0, correctPixels = 0; for (let i = 0; i < guideData.length; i += 4) { const isGuidePixel = guideData[i + 3] > 0, isDrawingPixel = drawingData[i + 3] > 0; if (isGuidePixel) templatePixels++; if (isDrawingPixel) userPixels++; if (isGuidePixel && isDrawingPixel) correctPixels++; } if (templatePixels === 0) { scoreInfo.textContent = 'Score: 0%'; return; } const incorrectPixels = userPixels - correctPixels, score = (correctPixels / (templatePixels + (incorrectPixels * 0.5))) * 100; const roundedScore = Math.round(score); scoreInfo.textContent = `Score: ${roundedScore}%`; if (window.playerDataManager) { window.playerDataManager.setStat('kanjiDrawingHighScore', roundedScore); window.playerDataManager.rewardXp('kanjiPracticeGrade'); const kanjiChar = lessons[currentLessonIndex].kanji[currentKanjiInLessonIndex].char; if (roundedScore === 100) { window.playerDataManager.setStat('kanjiPerfectScore', 1); } if (kanjiChar === '待') { window.playerDataManager.setStat('kanjiGraded_待', 1); } else if (kanjiChar === '守') { window.playerDataManager.setStat('kanjiGraded_守', 1); } else if (kanjiChar === '末') { window.playerDataManager.setStat('kanjiGraded_末', 1); } } };
+        const gradeDrawing = () => { 
+            const guideData = guideCtx.getImageData(0, 0, guideCanvas.width, guideCanvas.height).data, 
+                  drawingData = drawingCtx.getImageData(0, 0, drawingCanvas.width, drawingCanvas.height).data; 
+            let templatePixels = 0, userPixels = 0, correctPixels = 0; 
+            for (let i = 0; i < guideData.length; i += 4) { 
+                const isGuidePixel = guideData[i + 3] > 0, 
+                      isDrawingPixel = drawingData[i + 3] > 0; 
+                if (isGuidePixel) templatePixels++; 
+                if (isDrawingPixel) userPixels++; 
+                if (isGuidePixel && isDrawingPixel) correctPixels++; 
+            } 
+            if (templatePixels === 0) { 
+                scoreInfo.textContent = 'Score: 0%'; 
+                return; 
+            } 
+            const incorrectPixels = userPixels - correctPixels, 
+                  score = (correctPixels / (templatePixels + (incorrectPixels * 0.5))) * 100; 
+
+            // New grading logic: scale so 80 becomes 100, then cap at 100.
+            const scaledScore = score * (100 / 80);
+            const finalScore = Math.round(Math.min(100, scaledScore));
+
+            scoreInfo.textContent = `Score: ${finalScore}%`; 
+            if (window.playerDataManager) { 
+                window.playerDataManager.setStat('kanjiDrawingHighScore', finalScore); 
+                window.playerDataManager.rewardXp('kanjiPracticeGrade'); 
+                const kanjiChar = lessons[currentLessonIndex].kanji[currentKanjiInLessonIndex].char; 
+                if (finalScore === 100) { 
+                    window.playerDataManager.setStat('kanjiPerfectScore', 1); 
+                } 
+                if (kanjiChar === '待') { 
+                    window.playerDataManager.setStat('kanjiGraded_待', 1); 
+                } else if (kanjiChar === '守') { 
+                    window.playerDataManager.setStat('kanjiGraded_守', 1); 
+                } else if (kanjiChar === '末') { 
+                    window.playerDataManager.setStat('kanjiGraded_末', 1); 
+                } 
+            } 
+        };
         
         return { 
             init: () => { 
