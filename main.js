@@ -8,7 +8,7 @@
     // This is the single spot where you can edit all XP values for different activities.
     const xpRewards = {
         // Kanji Practice (Values are ready for when you implement this)
-        kanjiPracticeGrade: 15,
+        kanjiPracticeGrade: 0.3,
         kanjiQuizRateAnswer: 10,
         kanjiReadingCorrectNormal: 5,
         kanjiReadingCorrectHard: 8,
@@ -53,10 +53,10 @@
         { id: 'level_100', name: 'Shogun', description: 'Reach Level 100.', tier: 6, requirement: { type: 'stat', stat: 'level', value: 100 }, category: 'general' },
 
         // Kanji Achievements
-        { id: 'kanji_draw_score_80', name: 'Getting the Hang of It', description: 'Score 80%+ on a Kanji drawing.', tier: 2, requirement: { type: 'stat', stat: 'kanjiDrawingHighScore', value: 80 }, category: 'kanji' },
-        { id: 'kanji_draw_score_90', name: 'Perfectionist', description: 'Score 90%+ on a Kanji drawing.', tier: 3, requirement: { type: 'stat', stat: 'kanjiDrawingHighScore', value: 90 }, category: 'kanji' },
-        { id: 'kanji_draw_score_98', name: 'Pixel Perfect', description: 'Score 98%+ on a Kanji drawing.', tier: 4, requirement: { type: 'stat', stat: 'kanjiDrawingHighScore', value: 98 }, category: 'kanji' },
-        { id: 'kanji_draw_score_100', name: 'A Perfect Stroke', description: 'Score 100% on a Kanji drawing.', tier: 5, requirement: { type: 'stat', stat: 'kanjiPerfectScore', value: 1 }, category: 'kanji' },
+        { id: 'kanji_draw_score_80', name: 'Getting the Hang of It', description: 'Score 80%+ on a Kanji drawing.', tier: 1, requirement: { type: 'stat', stat: 'kanjiDrawingHighScore', value: 80 }, category: 'kanji' },
+        { id: 'kanji_draw_score_90', name: 'Perfectionist', description: 'Score 90%+ on a Kanji drawing.', tier: 2, requirement: { type: 'stat', stat: 'kanjiDrawingHighScore', value: 90 }, category: 'kanji' },
+        { id: 'kanji_draw_score_98', name: 'Pixel Perfect', description: 'Score 98%+ on a Kanji drawing.', tier: 2, requirement: { type: 'stat', stat: 'kanjiDrawingHighScore', value: 98 }, category: 'kanji' },
+        { id: 'kanji_draw_score_100', name: 'A Perfect Stroke', description: 'Score 100% on a Kanji drawing.', tier: 3, requirement: { type: 'stat', stat: 'kanjiPerfectScore', value: 1 }, category: 'kanji' },
         { id: 'kanji_graded_matsu', name: 'Patiently Waiting', description: 'Successfully grade the Kanji for "wait" (待).', tier: 1, requirement: { type: 'stat', stat: 'kanjiGraded_待', value: 1 }, category: 'kanji' },
         { id: 'kanji_graded_mamoru', name: 'Ever Vigilant', description: 'Successfully grade the Kanji for "protect" (守).', tier: 1, requirement: { type: 'stat', stat: 'kanjiGraded_守', value: 1 }, category: 'kanji' },
         { id: 'kanji_graded_sue', name: 'The Final Stroke', description: 'Successfully grade the Kanji for "end" (末).', tier: 1, requirement: { type: 'stat', stat: 'kanjiGraded_末', value: 1 }, category: 'kanji' },
@@ -322,7 +322,7 @@
         },
         increaseStat(stat, amount) { if (this.data.stats[stat] === undefined) this.data.stats[stat] = 0; this.data.stats[stat] += amount; this.checkAchievements(); this.save(); },
         setStat(stat, value) { if (this.data.stats[stat] === undefined || value > this.data.stats[stat]) { this.data.stats[stat] = value; } this.checkAchievements(); this.save(); },
-        addXp(amount) { const p = this.data.profile; p.xp += amount; let nextLvlXp = p.level * XP_PER_LEVEL; while (p.xp >= nextLvlXp) { p.xp -= nextLvlXp; p.level++; this.setStat('level', p.level); nextLvlXp = p.level * XP_PER_LEVEL; } this.save(); },
+        addXp(amount) { const p = this.data.profile; p.xp += amount; let nextLvlXp = XP_PER_LEVEL; while (p.xp >= nextLvlXp) { p.xp -= nextLvlXp; p.level++; this.setStat('level', p.level); nextLvlXp = XP_PER_LEVEL; } this.save(); },
         
         // --- NEW: Centralized function to award XP based on an activity ID ---
         rewardXp(activityId) {
@@ -389,7 +389,7 @@
         };
         if (!els.name) return;
         const p = data.profile;
-        const nextLvlXp = p.level * XP_PER_LEVEL;
+        const nextLvlXp = XP_PER_LEVEL;
         els.name.textContent = p.name;
         els.level.textContent = p.level;
         els.xp.textContent = `${Math.floor(p.xp)} / ${nextLvlXp} XP`;
