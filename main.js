@@ -1,4 +1,16 @@
 (function() { // IIFE to avoid polluting global scope
+    // --- FIX ---
+    // Listen for the pageshow event, which fires when navigating back to a page.
+    // This is crucial for handling the back-forward cache (bfcache) in browsers.
+    window.addEventListener('pageshow', function(event) {
+        // If the body has the 'is-leaving' class (from when we navigated away),
+        // remove it so the opening curtain animation can play correctly.
+        if (document.body.classList.contains('is-leaving')) {
+            document.body.classList.remove('is-leaving');
+        }
+    });
+    // --- END FIX ---
+
     // --- Configuration ---
     const PLAYER_DATA_KEY = 'japaneseLearnerProgress';
     const THEME_KEY = 'japaneseLearnerTheme';
@@ -855,4 +867,3 @@
         window.playerDataManager = playerDataManager;
     });
 })();
-
