@@ -6,7 +6,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const instructionsContainer = document.querySelector('.instructions');
     const instructionsHeader = document.querySelector('.instructions-header');
     const toggleButton = document.getElementById('toggle-instructions');
-    const copyButton = document.getElementById('copy-button'); // New button
+    const copyButton = document.getElementById('copy-button');
+    // NEW: Elements for responsive layout changes
+    const mainContent = document.querySelector('.main-content');
+    const profileCard = document.getElementById('profile-card');
+    const body = document.body;
 
     // --- 2. State & Dynamic Constants ---
     let ROWS;
@@ -17,6 +21,31 @@ document.addEventListener('DOMContentLoaded', () => {
     let cells = [];
     let currentStreak = 0;
     let unrewardedChars = 0;
+    
+    // --- NEW: Function to handle moving the profile card ---
+    const handleResponsiveLayout = () => {
+        const breakpoint = 1800; // The pixel width where the layout changes
+
+        // Ensure all required elements are present before proceeding
+        if (!profileCard || !mainContent || !body) {
+            console.error("Required elements for layout handling are missing.");
+            return;
+        }
+
+        if (window.innerWidth <= breakpoint) {
+            // On smaller screens (<= 1400px), move the card into the main content column.
+            // We check if it's not already there to prevent unnecessary DOM changes.
+            if (profileCard.parentElement !== mainContent) {
+                mainContent.appendChild(profileCard);
+            }
+        } else {
+            // On larger screens (> 1400px), move the card back to be a direct child of the body.
+            // We insert it before the app container to restore the original desktop structure.
+            if (profileCard.parentElement !== body) {
+                body.insertBefore(profileCard, document.getElementById('app-container'));
+            }
+        }
+    };
 
     // --- Accordion Logic ---
     if (instructionsHeader) {
@@ -161,7 +190,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // --- NEW: Copy to Clipboard Logic ---
     const showCopySuccess = () => {
         const buttonIcon = copyButton.querySelector('i');
         const buttonText = copyButton.querySelector('span');
@@ -170,7 +198,6 @@ document.addEventListener('DOMContentLoaded', () => {
         buttonIcon.className = 'ph-bold ph-check-bold';
         buttonText.textContent = 'Copied!';
 
-        // Prevent multiple clicks from creating multiple timers
         if (copyButton.dataset.timeoutId) {
             clearTimeout(copyButton.dataset.timeoutId);
         }
@@ -186,11 +213,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     copyButton.addEventListener('click', () => {
-        // Use modern clipboard API
         navigator.clipboard.writeText(textarea.value).then(showCopySuccess)
         .catch(err => {
             console.error('Async clipboard copy failed, trying fallback:', err);
-            // Fallback for older browsers or insecure contexts (http)
             try {
                 textarea.select();
                 document.execCommand('copy');
@@ -201,7 +226,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-
     // --- Resize Handling ---
     let resizeTimeout;
     window.addEventListener('resize', () => {
@@ -210,6 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentText = textarea.value;
             const currentSelection = textarea.selectionStart;
 
+            handleResponsiveLayout(); // Call the layout function on resize
             updateGridConfig();
             createGrid();
 
@@ -221,9 +246,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- 7. Initial Setup ---
+    handleResponsiveLayout(); // Call the layout function on initial load
     updateGridConfig();
     createGrid();
     updateGridDisplay();
     textarea.focus();
     updateCursorVisual();
 });
+

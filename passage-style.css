@@ -178,7 +178,7 @@
     transition: transform 0.3s ease;
 }
 
-/* --- NEW: Styles for Grid Footer and Copy Button --- */
+/* --- Styles for Grid Footer and Copy Button --- */
 .grid-footer {
     display: flex;
     justify-content: space-between;
@@ -219,72 +219,134 @@
     color: #ffffff;
 }
 
+/* --- NEW: Tablet/Laptop "Integrated" Layout --- */
+@media (max-width: 1800px) {
+    body {
+        /* REMOVED flex properties that were causing the issue */
+        padding: 1.5rem;
+    }
 
-/* --- Tablet & Mobile Responsiveness --- */
-@media (max-width: 1400px) {
     #app-container {
         position: static;
         transform: none;
-        margin: 2rem auto;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0;
     }
-
+    
     #passage-layout {
-        flex-direction: column;
-        align-items: center; /* Center stacked items */
+        flex-direction: row;
+        align-items: flex-start;
     }
 
-    /* Ensure both main sections take up full width but don't over-stretch */
-    .main-content {
-        width: 100%;
-        max-width: 600px;
-    }
-    
-    .instructions {
-        width: 100%;
-        min-width: auto;
-        max-width: 600px;
-    }
-    
+    /* --- Styles for the INTEGRATED Profile Card --- */
     #profile-card {
         position: static;
         transform: none;
         width: 100%;
-        max-width: 600px;
-        margin: 0 auto 2rem;
+        max-width: none;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        margin: 2.5rem 0 0 0; /* Creates space from the content above */
+        
+        display: flex;
+        align-items: center;
+        /* REMOVED: justify-content was here, replaced with margin-left: auto below */
+    }
+
+    .main-content #profile-card .profile-header {
+        /* UPDATED: Removed flex: 1 to prevent it from growing and pushing the XP bar */
+        margin-bottom: 0;
+    }
+
+    .main-content #profile-card .level-system {
+        flex-shrink: 0;
+        width: 220px;
+        margin-left: auto; /* ADDED: This pushes the level system to the far right */
+    }
+    
+    /* NEW: Aligns the level/XP text to the left */
+    .main-content #profile-card .level-display {
+        justify-content: flex-start;
+        gap: 1rem;
+    }
+}
+
+
+/* --- Stacked Tablet & Mobile Layout --- */
+@media (max-width: 1100px) {
+    body {
+        padding: 2rem 1rem;
+    }
+    
+    #profile-card, #app-container {
+        max-width: 700px;
+    }
+    
+    #profile-card {
+       margin: 2.5rem auto 0;
+       display: block;
+    }
+
+    .main-content #profile-card .profile-header {
+        margin-bottom: 1.5rem;
+    }
+    .main-content #profile-card .level-system {
+        width: auto;
+        margin-left: 0; /* Reset margin for stacked layout */
+    }
+
+    /* Restore default level display alignment for stacked view */
+    .main-content #profile-card .level-display {
+        justify-content: space-between;
+        gap: 0;
+    }
+
+    #passage-layout {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .main-content, .instructions {
+        width: 100%;
+        min-width: auto;
+        max-width: 700px;
     }
 }
 
 /* --- Mobile-Specific Portrait Design --- */
 @media (max-width: 800px) {
     body {
-        padding: 0 1rem;
+        padding: 1.5rem 1rem;
     }
 
     #app-container {
         width: 100%;
-        margin: 1.5rem 0;
+        margin: 0 auto;
+    }
+
+    #profile-card {
+        margin: 1.5rem auto 1rem; /* UPDATED: Reduced top margin, added bottom margin */
+        padding: 0;
     }
     
     .app-header {
         margin-bottom: 1.5rem;
     }
 
-    /* Constrain content width and fix box model to prevent overflow */
     .main-content, .instructions {
         width: 100%;
         max-width: 500px;
-        margin-left: auto;
-        margin-right: auto;
-        box-sizing: border-box; /* This is the fix: ensures padding is included in the width */
+        box-sizing: border-box;
     }
 
-    /* Adjust grid for portrait view (10x15) */
     #passage-grid {
         grid-template-columns: repeat(10, 1fr);
         aspect-ratio: 10 / 15;
     }
 
-    /* Adjust font size in the grid for the new dimensions */
     .grid-cell {
         font-size: clamp(0.7rem, 3vw, 1.4rem);
     }
@@ -297,10 +359,9 @@
     
     .instructions {
         padding: 1rem 1.25rem;
-        margin-top: 2rem; /* Add space between the grid area and the accordion */
+        margin-top: 2rem;
     }
     
-    /* Instructions Accordion Logic for Mobile */
     .instructions-header {
         cursor: pointer;
     }
@@ -311,7 +372,7 @@
     }
     
     #toggle-instructions {
-        display: block; /* Show button on mobile */
+        display: block;
     }
     
     .instructions.is-open #toggle-instructions {
@@ -331,11 +392,6 @@
         transition: max-height 0.5s ease-in;
         padding-top: 1rem;
     }
-}
-
-/* Page transition animations */
-.page-transition::after {
-    width: 51%;
 }
 
 @keyframes fadeInCardWithDelay {
@@ -358,3 +414,4 @@ body:not(.is-leaving) #profile-card {
 body.is-leaving #profile-card {
   animation: fadeOutCardWithDelay 0.8s ease forwards;
 }
+

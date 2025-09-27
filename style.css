@@ -1,6 +1,8 @@
 /* --- Base Styles --- */
 :root {
     --bg-color: #f0f2f5; --card-bg-color: #ffffff; --text-color: #333; --heading-color: #1a1a1a; --subtle-text-color: #6c757d; --border-color: #e9ecef; --interactive-color: #007bff; --interactive-hover-color: #0056b3; --card-alt-bg-color: #f8f9fa;
+    --danger-color: #dc3545;
+    --danger-hover-color: #c82333;
 
     /* --- Title Tier Colors --- */
     --tier-1-color: #95a5a6; /* Common (Grey) */
@@ -8,28 +10,71 @@
     --tier-3-color: #3498db; /* Rare (Blue) */
     --tier-4-color: #9b59b6; /* Epic (Purple) */
     --tier-5-color: #f1c40f; /* Mythic (Gold) */
-    --tier-6-gradient: linear-gradient(90deg, #ff79c6, #f1fa8c, #50fa7b, #8be9fd, #bd93f9, #ff79c6);
+    /* UPDATED: Tier 6 is now Pink */
+    --tier-6-gradient: linear-gradient(45deg, #ff79c6, #ffc0e9, #ff79c6);
+    /* UPDATED: Tier 7 is now Rainbow */
+    --tier-7-gradient: linear-gradient(90deg, #ff79c6, #f1fa8c, #50fa7b, #8be9fd, #bd93f9, #ff79c6);
 }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 2rem; box-sizing: border-box; transition: background-color 0.3s, color 0.3s; }
 h1, h2, h3, p { margin: 0; }
 h1 { font-size: 2.5rem; color: var(--heading-color); }
 h2 { font-size: 1.25rem; color: var(--subtle-text-color); }
 h3 { font-size: 1rem; color: #495057; }
+button { font-family: inherit; }
 
 /* --- Page Transition (Curtain Effect) --- */
-.page-transition { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
-.page-transition::before, .page-transition::after { content: ''; position: absolute; top: 0; width: 50.1%; height: 100%; background: var(--bg-color); }
-.page-transition::before { left: 0; }
-.page-transition::after { right: 0; }
+.page-transition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden; 
+}
+.page-transition::before, .page-transition::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 100vw; /* Make curtains very wide to handle easing bounce */
+    height: 100%;
+    background: var(--bg-color);
+}
+.page-transition::before {
+    left: 0;
+    transform: translateX(-100%); /* Start fully off-screen to the left */
+}
+.page-transition::after {
+    right: 0;
+    transform: translateX(100%); /* Start fully off-screen to the right */
+}
+/* Open Animation */
 body:not(.is-leaving) .page-transition::before { animation: curtain-open-left 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards; }
 body:not(.is-leaving) .page-transition::after { animation: curtain-open-right 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards; }
+/* Close Animation */
 body.is-leaving .page-transition { pointer-events: auto; }
 body.is-leaving .page-transition::before { animation: curtain-close-left 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards; }
 body.is-leaving .page-transition::after { animation: curtain-close-right 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards; }
-@keyframes curtain-close-left { from { transform: translateX(-100%); } to { transform: translateX(0%); } }
-@keyframes curtain-open-left { from { transform: translateX(0%); } to { transform: translateX(-100%); } }
-@keyframes curtain-close-right { from { transform: translateX(100%); } to { transform: translateX(0%); } }
-@keyframes curtain-open-right { from { transform: translateX(0%); } to { transform: translateX(100%); } }
+
+/* Keyframes updated to have curtains meet in the middle */
+@keyframes curtain-close-left { 
+    from { transform: translateX(-100%); } /* From off-screen left */
+    to { transform: translateX(-50%); }   /* To covering the left half */
+}
+@keyframes curtain-open-left { 
+    from { transform: translateX(-50%); }   /* From covering left half */
+    to { transform: translateX(-100%); } /* To off-screen left */
+}
+@keyframes curtain-close-right { 
+    from { transform: translateX(100%); }  /* From off-screen right */
+    to { transform: translateX(50%); }    /* To covering the right half */
+}
+@keyframes curtain-open-right { 
+    from { transform: translateX(50%); }    /* From covering right half */
+    to { transform: translateX(100%); }  /* To off-screen right */
+}
+
 
 /* --- Main Layout & Header --- */
 #main-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; width: 100%; max-width: 1200px; }
@@ -37,6 +82,11 @@ body.is-leaving .page-transition::after { animation: curtain-close-right 0.8s cu
 .home-header { display: flex; justify-content: space-between; align-items: center; text-align: left; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem; }
 .home-header h1 { font-weight: 800; }
 .home-header h2 { font-weight: 500; }
+
+/* --- Header Controls (Theme Toggle & Settings) --- */
+.header-controls { display: flex; align-items: center; gap: 1.5rem; }
+#settings-btn { font-size: 1.75rem; color: var(--subtle-text-color); cursor: pointer; transition: color 0.2s ease, transform 0.2s ease; }
+#settings-btn:hover { color: var(--text-color); transform: rotate(20deg); }
 
 /* --- Dark Mode Toggle --- */
 .theme-switcher-wrapper { display: flex; align-items: center; gap: 0.75rem; color: var(--subtle-text-color); }
@@ -60,7 +110,14 @@ input:checked + .slider:before { transform: translateX(22px); }
 
 /* --- Side Panel & Profile Card --- */
 #side-panel { display: flex; flex-direction: column; gap: 2rem; }
-#profile-card { background-color: var(--card-bg-color); padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+#profile-card { 
+    background-color: var(--card-bg-color); 
+    padding: 1.5rem; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    position: relative; /* Added for level-up animation positioning */
+    overflow: hidden;   /* Added to contain the level-up animation */
+}
 .profile-header { display: flex; flex-direction: row; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
 
 /* NEW: Wrapper for PFP and its picker */
@@ -166,6 +223,91 @@ input[type="color"]::-moz-color-swatch {
 .xp-bar-container { width: 100%; height: 10px; background-color: var(--border-color); border-radius: 5px; overflow: hidden; }
 #xp-bar { width: 0%; height: 100%; background-color: var(--interactive-color); border-radius: 5px; transition: width 0.5s ease; }
 
+/* --- Level Up Animation --- */
+#level-up-animation-container {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 10;
+}
+
+.level-up-wipe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: var(--card-bg-color); /* MODIFIED */
+    transform: translateY(101%);
+}
+
+.level-up-text {
+    position: relative;
+    z-index: 11;
+    color: var(--heading-color); /* MODIFIED */
+    font-size: 2.5rem;          /* MODIFIED */
+    font-weight: 600;
+    font-family: inherit;       /* MODIFIED */
+}
+
+.level-up-text span {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(40px);
+}
+.level-up-text .level-up-space {
+    width: 0.3em;
+}
+
+/* Triggering the Animation */
+#profile-card.is-leveling-up #level-up-animation-container {
+    pointer-events: auto;
+    opacity: 1;
+    animation: fade-in-out-container 3.5s ease-in-out forwards;
+}
+
+#profile-card.is-leveling-up .level-up-wipe {
+    animation: wipe-up-cover-reveal 3.5s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+#profile-card.is-leveling-up .level-up-text span {
+    animation: fly-in-out 2.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Stagger the letter animations */
+#profile-card.is-leveling-up .level-up-text span:nth-child(1) { animation-delay: calc(0.5s + 0.05s * 1); } /* L */
+#profile-card.is-leveling-up .level-up-text span:nth-child(2) { animation-delay: calc(0.5s + 0.05s * 2); } /* e */
+#profile-card.is-leveling-up .level-up-text span:nth-child(3) { animation-delay: calc(0.5s + 0.05s * 3); } /* v */
+#profile-card.is-leveling-up .level-up-text span:nth-child(4) { animation-delay: calc(0.5s + 0.05s * 4); } /* e */
+#profile-card.is-leveling-up .level-up-text span:nth-child(5) { animation-delay: calc(0.5s + 0.05s * 5); } /* l */
+/* space */
+#profile-card.is-leveling-up .level-up-text span:nth-child(7) { animation-delay: calc(0.5s + 0.05s * 7); } /* U */
+#profile-card.is-leveling-up .level-up-text span:nth-child(8) { animation-delay: calc(0.5s + 0.05s * 8); } /* p */
+#profile-card.is-leveling-up .level-up-text span:nth-child(9) { animation-delay: calc(0.5s + 0.05s * 9); } /* ! */
+
+/* Keyframes */
+@keyframes wipe-up-cover-reveal {
+    0%   { transform: translateY(101%); }
+    20%  { transform: translateY(0%); }
+    80%  { transform: translateY(0%); }
+    100% { transform: translateY(-101%); }
+}
+
+@keyframes fly-in-out {
+    0%   { opacity: 0; transform: translateY(40px); }
+    15%  { opacity: 1; transform: translateY(0); }
+    85%  { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-40px); }
+}
+
+@keyframes fade-in-out-container {
+    0%, 100% { opacity: 0; }
+    1%, 99%  { opacity: 1; }
+}
+
 /* --- Titles & Achievements --- */
 #titles-container { background-color: var(--card-bg-color); padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); flex-grow: 1; }
 #titles-container h2 { display: flex; align-items: center; gap: 0.5rem; padding-bottom: 1rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); font-weight: 600; color: var(--heading-color); }
@@ -204,6 +346,7 @@ input[type="color"]::-moz-color-swatch {
 .title-tier-3, #player-title.title-tier-3 { color: var(--tier-3-color); }
 .title-tier-4, #player-title.title-tier-4 { color: var(--tier-4-color); }
 .title-tier-5, #player-title.title-tier-5 { color: var(--tier-5-color); text-shadow: 0 0 8px var(--tier-5-color); }
+/* UPDATED: Tier 6 styling to Pink Glow */
 .title-tier-6, #player-title.title-tier-6 {
     background: var(--tier-6-gradient);
     background-size: 200% auto;
@@ -211,18 +354,79 @@ input[type="color"]::-moz-color-swatch {
     -moz-background-clip: text;
     -webkit-text-fill-color: transparent;
     -moz-text-fill-color: transparent;
-    animation: legendary-glow 4s ease-in-out infinite, legendary-scroll 4s linear infinite;
+    animation: legendary-pink-glow 8s ease-in-out infinite, legendary-scroll 8s linear infinite;
 }
+/* UPDATED: Tier 7 styling to Rainbow Glow */
+.title-tier-7, #player-title.title-tier-7, .legendary-name {
+    background: var(--tier-7-gradient);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    animation: legendary-rainbow-glow 16s ease-in-out infinite, legendary-scroll 16s linear infinite;
+}
+
+
+
+
+
 .ach-name.title-tier-5 { color: var(--tier-5-color); text-shadow: 0 0 6px var(--tier-5-color); }
-.ach-name.title-tier-6 { background: var(--tier-6-gradient); background-size: 100%; -webkit-background-clip: text; -moz-background-clip: text; -webkit-text-fill-color: transparent; -moz-text-fill-color: transparent; text-shadow: 0 0 8px rgba(255,255,255,0.5); }
-@keyframes legendary-scroll { to { background-position: 200% center; } }
-@keyframes legendary-glow {
-    0% { text-shadow: 0 0 5px #ff79c6, 0 0 10px #ff79c6; }
-    25% { text-shadow: 0 0 5px #50fa7b, 0 0 10px #50fa7b; }
-    50% { text-shadow: 0 0 5px #8be9fd, 0 0 10px #8be9fd; }
-    75% { text-shadow: 0 0 5px #bd93f9, 0 0 10px #bd93f9; }
-    100% { text-shadow: 0 0 5px #ff79c6, 0 0 10px #ff79c6; }
+/* UPDATED: Tier 6 for achievement popups */
+.ach-name.title-tier-6 { 
+    background: var(--tier-6-gradient); 
+    background-size: 100%; 
+    -webkit-background-clip: text; 
+    -moz-background-clip: text; 
+    -webkit-text-fill-color: transparent; 
+    -moz-text-fill-color: transparent; 
+    text-shadow: 0 0 8px rgba(255, 121, 198, 0.7); 
 }
+/* UPDATED: Tier 7 for achievement popups */
+.ach-name.title-tier-7 { 
+    background: var(--tier-7-gradient); 
+    background-size: 100%; 
+    -webkit-background-clip: text; 
+    -moz-background-clip: text; 
+    -webkit-text-fill-color: transparent; 
+    -moz-text-fill-color: transparent; 
+    text-shadow: 0 0 8px rgba(255,255,255,0.5); 
+}
+
+@keyframes legendary-scroll { to { background-position: 200% center; } }
+
+/* UPDATED: Renamed to rainbow and used for Tier 7 */
+@keyframes legendary-rainbow-glow {
+  /* Pink */
+  0% { text-shadow: 0 0 7px #ff79c6, 0 0 14px #ff79c6, 0 0 21px rgba(255, 121, 198, 0.6); }
+  12.5% { text-shadow: 0 0 10px #ffc0e9, 0 0 20px #ff79c6, 0 0 30px rgba(255, 121, 198, 0.8); }
+  
+  /* Green */
+  25% { text-shadow: 0 0 7px #50fa7b, 0 0 14px #50fa7b, 0 0 21px rgba(80, 250, 123, 0.6); }
+  37.5% { text-shadow: 0 0 10px #b4fccb, 0 0 20px #50fa7b, 0 0 30px rgba(80, 250, 123, 0.8); }
+
+  /* Cyan */
+  50% { text-shadow: 0 0 7px #8be9fd, 0 0 14px #8be9fd, 0 0 21px rgba(139, 233, 253, 0.6); }
+  62.5% { text-shadow: 0 0 10px #cff4fd, 0 0 20px #8be9fd, 0 0 30px rgba(139, 233, 253, 0.8); }
+
+  /* Purple */
+  75% { text-shadow: 0 0 7px #bd93f9, 0 0 14px #bd93f9, 0 0 21px rgba(189, 147, 249, 0.6); }
+  87.5% { text-shadow: 0 0 10px #e0cffc, 0 0 20px #bd93f9, 0 0 30px rgba(189, 147, 249, 0.8); }
+
+  /* Back to Pink */
+  100% { text-shadow: 0 0 7px #ff79c6, 0 0 14px #ff79c6, 0 0 21px rgba(255, 121, 198, 0.6); }
+}
+/* NEW: Keyframes for Tier 6 Pink Glow */
+@keyframes legendary-pink-glow {
+  0%, 100% {
+    text-shadow: 0 0 8px #ff79c6, 0 0 16px #ff79c6, 0 0 24px rgba(255, 121, 198, 0.5);
+  }
+  /* PEAK PULSE (DIMMED) */
+  50% {
+    text-shadow: 0 0 10px #ffc0e9, 0 0 20px #ff79c6, 0 0 28px rgba(255, 148, 224, 0.5); 
+  }
+}
+
 
 /* --- Achievement Notification --- */
 #notification-container { position: fixed; bottom: 20px; right: 20px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
@@ -232,9 +436,31 @@ input[type="color"]::-moz-color-swatch {
 .achievement-popup .ach-title { font-size: 0.9rem; font-weight: 500; color: #888; margin: 0 0 0.25rem 0; }
 .achievement-popup .ach-name { font-size: 1.1rem; font-weight: 700; margin: 0; }
 
+/* --- Base Overlay Styles --- */
+.hidden { 
+    opacity: 0 !important; /* Use !important to ensure it overrides ID styles */
+    pointer-events: none !important; 
+    visibility: hidden !important;
+}
+
+#welcome-overlay, #settings-overlay, #confirm-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    opacity: 1;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    visibility: visible;
+}
+
 /* --- Welcome Popup --- */
-#welcome-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 10000; opacity: 1; transition: opacity 0.3s ease; }
-#welcome-overlay.hidden { opacity: 0; pointer-events: none; }
 #welcome-popup { background-color: var(--card-bg-color); padding: 2.5rem; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); text-align: center; max-width: 500px; width: 90%; display: flex; flex-direction: column; gap: 1.5rem; border: 1px solid var(--border-color); }
 #welcome-popup h1 { font-size: 2.2rem; font-weight: 800; }
 #welcome-popup .disclaimer { color: var(--subtle-text-color); line-height: 1.6; font-size: 0.95rem; }
@@ -246,13 +472,101 @@ input[type="color"]::-moz-color-swatch {
 #welcome-submit-btn:disabled { background-color: #ccc; cursor: not-allowed; opacity: 0.7; }
 :root.dark-mode #welcome-submit-btn:disabled { background-color: #555; }
 
+
+/* --- Settings Popup --- */
+#settings-popup { background-color: var(--card-bg-color); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-width: 550px; width: 90%; border: 1px solid var(--border-color); }
+.settings-header { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.75rem; border-bottom: 1px solid var(--border-color); }
+.settings-header h2 { font-size: 1.4rem; font-weight: 600; color: var(--heading-color); }
+#settings-close-btn { font-size: 1.5rem; color: var(--subtle-text-color); cursor: pointer; transition: color 0.2s, transform 0.2s; }
+#settings-close-btn:hover { color: var(--text-color); transform: scale(1.1); }
+.settings-content { display: flex; flex-direction: column; }
+.setting-item { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.75rem; gap: 1rem; }
+.setting-item + .setting-item { border-top: 1px solid var(--border-color); }
+.setting-text h4 { font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem; color: var(--heading-color); }
+.setting-text p { font-size: 0.9rem; color: var(--subtle-text-color); line-height: 1.4; }
+.danger-zone { border-top: 4px solid var(--danger-color) !important; margin-top: 1rem; }
+.danger-zone h4 { color: var(--danger-color); }
+#erase-data-btn {
+    background-color: var(--danger-color);
+    color: white;
+    border: none;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    flex-shrink: 0;
+}
+#erase-data-btn:hover { background-color: var(--danger-hover-color); }
+
+/* --- Custom Toggle Switch --- */
+.toggle-switch { position: relative; display: inline-block; width: 50px; height: 28px; flex-shrink: 0; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-switch .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 28px; }
+.toggle-switch .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+.toggle-switch input:checked + .slider { background-color: var(--interactive-color); }
+.toggle-switch input:checked + .slider:before { transform: translateX(22px); }
+
+/* --- Confirmation Dialog --- */
+#confirm-dialog {
+    background-color: var(--card-bg-color);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.25);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    border-top: 5px solid var(--danger-color);
+}
+#confirm-message {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--heading-color);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+.confirm-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+.confirm-buttons button {
+    padding: 0.7rem 1.25rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+#confirm-yes-btn {
+    background-color: var(--danger-color);
+    color: white;
+}
+#confirm-yes-btn:hover {
+    background-color: var(--danger-hover-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
+}
+#confirm-no-btn {
+    background-color: var(--border-color);
+    color: var(--text-color);
+}
+#confirm-no-btn:hover {
+    background-color: #ddd;
+}
+:root.dark-mode #confirm-no-btn:hover {
+    background-color: #444;
+}
+
 /* --- Dark Mode Theme --- */
-:root.dark-mode { --bg-color: #121212; --card-bg-color: #1e1e1e; --text-color: #e0e0e0; --heading-color: #ffffff; --subtle-text-color: #888888; --border-color: #333333; --interactive-color: #3391ff; --interactive-hover-color: #55aaff; --card-alt-bg-color: #282828; }
+:root.dark-mode { --bg-color: #121212; --card-bg-color: #1e1e1e; --text-color: #e0e0e0; --heading-color: #ffffff; --subtle-text-color: #888888; --border-color: #333333; --interactive-color: #3391ff; --interactive-hover-color: #55aaff; --card-alt-bg-color: #282828; --danger-color: #e54b59; --danger-hover-color: #d63745; }
 :root.dark-mode .level-display { color: #bbbbbb; }
 :root.dark-mode .title-item.equipped { background-color: rgba(51, 145, 255, 0.15); }
 :root.dark-mode .achievement-popup { box-shadow: 0 5px 20px rgba(0,0,0,0.4); }
+:root.dark-mode #welcome-submit-btn:disabled { background-color: #555; }
 
-/* --- NEW: Mobile-First Responsive Design --- */
+/* --- Mobile-First Responsive Design --- */
 @media (max-width: 900px) {
     /* General Mobile Layout */
     body {
@@ -264,23 +578,46 @@ input[type="color"]::-moz-color-swatch {
     #main-layout {
         display: flex;
         flex-direction: column;
-        gap: 2.5rem; /* Consistent gap for mobile sections */
+        gap: 1.5rem; /* Consistent gap for mobile sections */
+    }
+    
+    /* Make children of these containers direct flex items of #main-layout */
+    #home-container, #side-panel {
+        display: contents;
     }
 
-    /* --- Re-order layout sections for mobile --- */
-    #side-panel {
-        display: contents; /* Allow children to be ordered within main-layout's flex context */
+    /* Now, we can reorder the grandchildren of main-layout */
+    .home-header { order: 1; }
+    #profile-card { order: 2; }
+    .practice-grid { order: 3; }
+    #titles-container { order: 4; }
+
+    /* --- Restore container styles lost from 'display: contents' --- */
+    #home-container {
+        /* This one intentionally loses its container styles to blend with the page */
+         background-color: transparent;
+         box-shadow: none;
+         padding: 0;
     }
 
+    /* Profile card gets its styles back */
     #profile-card {
-        order: -1; /* Move profile to the top, above the practice menu */
-        /* Integrate profile card into the page */
-        background-color: transparent;
-        box-shadow: none;
-        padding: 0;
+        background-color: var(--card-bg-color);
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
-    #profile-picture {
+    /* Titles container also needs to look like a card on mobile */
+    #titles-container {
+        background-color: var(--card-bg-color);
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    /* --- Styling for elements within the new flow --- */
+     #profile-picture {
         width: 65px;
         height: 65px;
         font-size: 2.2rem;
@@ -296,20 +633,14 @@ input[type="color"]::-moz-color-swatch {
 
     #titles-list { max-height: 250px; }
 
-    /* --- Main Content Section --- */
-    #home-container {
-        background-color: transparent;
-        box-shadow: none;
-        padding: 0;
-    }
-    
     .home-header {
         flex-direction: column;
-        align-items: center; /* Center header content */
+        align-items: flex-start; /* Align header content to left */
         gap: 1.5rem;
-        text-align: center;
+        text-align: left;
+        margin-bottom: 0; /* No margin as gap is handled by parent */
         padding-bottom: 1.5rem;
-        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--border-color);
     }
 
     .home-header h1 { font-size: 2.2rem; }
@@ -334,7 +665,6 @@ input[type="color"]::-moz-color-swatch {
     :root.dark-mode .practice-card {
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-
 
     .practice-card:hover {
         transform: translateX(4px);
@@ -363,4 +693,32 @@ input[type="color"]::-moz-color-swatch {
     /* Welcome popup adjustments */
     #welcome-popup { padding: 2rem 1.5rem; }
     #welcome-popup h1 { font-size: 1.8rem; }
+    
+    /* Settings Popup on Mobile */
+    .setting-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+    .setting-item .toggle-switch {
+        align-self: flex-end; /* Move toggle to the right */
+    }
+    .danger-zone {
+        align-items: center;
+    }
+    .danger-zone .setting-text {
+        text-align: center;
+    }
 }
+
+/* --- Player Card Visibility Setting --- */
+/*
+  This rule is applied by main.js based on the user's setting.
+  It hides the player card on module pages if the setting is turned off.
+  It specifically targets #profile-card when the body has the .hide-player-card-globally class.
+  This class is only added on module pages, so the main hub is unaffected.
+*/
+body.hide-player-card-globally #profile-card {
+    display: none !important;
+}
+

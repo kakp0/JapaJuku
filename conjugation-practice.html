@@ -60,47 +60,49 @@
 
     <!-- Main application container -->
     <div id="app-container">
-         <div class="app-header">
-             <a href="index.html" class="back-link"><i class="ph-bold ph-arrow-left"></i> Back to Hub</a>
-             <div class="theme-switcher-wrapper">
-                <i class="ph-bold ph-moon"></i>
-                <label class="theme-switcher">
-                    <input type="checkbox" id="theme-toggle">
-                    <span class="slider"></span>
-                </label>
-                <i class="ph-bold ph-sun"></i>
-            </div>
-        </div>
-        
-        <h1>Conjugation Practice</h1>
-        <p class="subtitle">Causative, Causative-Passive, and Conditional (ば)</p>
-
-        <div id="quiz-container">
-            <div id="prompt-area">
-                <div id="verb-prompt-card">
-                    <p id="verb-type-tag">Godan Verb</p>
-                    <h2 id="verb-display">食べる</h2>
-                </div>
-                <div class="arrow-indicator">
-                    <i class="ph-bold ph-arrow-right"></i>
-                </div>
-                <div id="form-prompt-card">
-                    <p id="form-tag">Conjugation Form</p>
-                    <h3 id="form-display">Causative</h3>
+        <div class="main-panel">
+            <div class="app-header">
+                <a href="index.html" class="back-link"><i class="ph-bold ph-arrow-left"></i> Back to Hub</a>
+                <div class="theme-switcher-wrapper">
+                    <i class="ph-bold ph-moon"></i>
+                    <label class="theme-switcher">
+                        <input type="checkbox" id="theme-toggle">
+                        <span class="slider"></span>
+                    </label>
+                    <i class="ph-bold ph-sun"></i>
                 </div>
             </div>
             
-            <div id="answer-area">
-                <input type="text" id="answer-input" placeholder="Enter the conjugated form" autocomplete="off" lang="ja">
-            </div>
+            <h1>Conjugation Practice</h1>
+            <p class="subtitle">Causative, Causative-Passive, and Conditional (ば)</p>
 
-            <div id="feedback-area">
-                <!-- Feedback messages will be injected here -->
-            </div>
+            <div id="quiz-container">
+                <div id="prompt-area">
+                    <div id="verb-prompt-card">
+                        <p id="verb-type-tag">Godan Verb</p>
+                        <h2 id="verb-display">食べる</h2>
+                    </div>
+                    <div class="arrow-indicator">
+                        <i class="ph-bold ph-arrow-right"></i>
+                    </div>
+                    <div id="form-prompt-card">
+                        <p id="form-tag">Conjugation Form</p>
+                        <h3 id="form-display">Causative</h3>
+                    </div>
+                </div>
+                
+                <div id="answer-area">
+                    <input type="text" id="answer-input" placeholder="Enter the conjugated form" autocomplete="off" lang="ja">
+                </div>
 
-            <div id="controls">
-                <button id="check-btn">Check</button>
-                <button id="next-btn" style="display: none;">Next</button>
+                <div id="feedback-area">
+                    <!-- Feedback messages will be injected here -->
+                </div>
+
+                <div id="controls">
+                    <button id="check-btn">Check</button>
+                    <button id="next-btn" style="display: none;">Next</button>
+                </div>
             </div>
         </div>
     </div>

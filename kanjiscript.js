@@ -15,14 +15,45 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawingQuizBtn = document.getElementById('drawing-quiz-btn');
     const readingQuizBtn = document.getElementById('reading-quiz-btn');
     const clearTimersBtn = document.getElementById('clear-timers-btn');
+    const mainPanel = document.querySelector('.main-panel');
+    const profileCard = document.getElementById('profile-card');
+    const body = document.body;
     let isDrawing = false, lastX = 0, lastY = 0;
 
     // --- Generic Drawing Functions ---
-    const getCoords = (canvas, e) => { const rect = canvas.getBoundingClientRect(); const event = e.touches ? e.touches[0] : e; return [event.clientX - rect.left, event.clientY - rect.top]; };
+    const getCoords = (canvas, e) => {
+        const rect = canvas.getBoundingClientRect();
+        const event = e.touches ? e.touches[0] : e;
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        return [(event.clientX - rect.left) * scaleX, (event.clientY - rect.top) * scaleY];
+    };
     const startDrawing = e => { isDrawing = true;[lastX, lastY] = getCoords(e.target, e); };
     const stopDrawing = () => { isDrawing = false; };
     const createDrawFunction = (canvas, ctx, onDraw) => e => { if (!isDrawing) return; e.preventDefault(); const [x, y] = getCoords(canvas, e); ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(x, y); ctx.stroke(); const dist = Math.hypot(x - lastX, y - lastY); if(onDraw) onDraw(Math.round(dist)); [lastX, lastY] = [x, y]; };
     
+    // --- Responsive Layout Handler ---
+    const handleResponsiveLayout = () => {
+        const breakpoint = 1400;
+        if (!profileCard || !mainPanel || !body) {
+            console.error("Required elements for layout handling are missing.");
+            return;
+        }
+
+        if (window.innerWidth <= breakpoint) {
+            if (profileCard.parentElement !== mainPanel) {
+                mainPanel.appendChild(profileCard);
+            }
+        } else {
+            if (profileCard.parentElement !== body) {
+                 const appContainer = document.getElementById('app-container');
+                 if (appContainer) {
+                    body.insertBefore(profileCard, appContainer);
+                 }
+            }
+        }
+    };
+
     // --- Mode Switching ---
     const allModeContainers = [practiceContainer, drawingQuizContainer, readingQuizContainer];
     const allModeBtns = [practiceModeBtn, drawingQuizBtn, readingQuizBtn];
@@ -144,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const isDarkMode = document.documentElement.classList.contains('dark-mode');
             if (!currentKanji) return; 
             answerCtx.clearRect(0, 0, answerCanvas.width, answerCanvas.height); 
-            answerCtx.fillStyle = isDarkMode ? '#e0e0e0' : '#000'; 
+            answerCtx.fillStyle = isDarkMode ? '#3391ff' : '#007bff'; 
             answerCtx.font = '170px "Yu Gothic", "Meiryo", sans-serif'; 
             answerCtx.textAlign = 'center'; 
             answerCtx.textBaseline = 'middle'; 
@@ -284,15 +315,21 @@ document.addEventListener('DOMContentLoaded', () => {
         } 
     };
     
-    // UPDATED: Removed themeManager from this script; it's now handled by main.js
-
     practiceModeBtn.addEventListener('click', () => switchToMode(practiceContainer, practiceModeBtn));
     drawingQuizBtn.addEventListener('click', () => { switchToMode(drawingQuizContainer, drawingQuizBtn); drawingQuiz.loadNextQuestion(); });
     readingQuizBtn.addEventListener('click', () => { switchToMode(readingQuizContainer, readingQuizBtn); readingQuiz.loadQuestion(); });
     clearTimersBtn.addEventListener('click', resetAllTimers);
 
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(handleResponsiveLayout, 250);
+    });
+
     practice.init();
     drawingQuiz.init();
     readingQuiz.init();
+    handleResponsiveLayout();
     switchToMode(practiceContainer, practiceModeBtn);
 });
+

@@ -4,11 +4,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- DOM Elements ---
     const sentenceDisplay = document.getElementById('sentence-display');
     const modifierDisplay = document.getElementById('modifier-display');
-    const translationHint = document.getElementById('translation-hint'); // Added hint element
+    const translationHint = document.getElementById('translation-hint');
     const answerInput = document.getElementById('answer-input');
     const feedbackArea = document.getElementById('feedback-area');
     const checkBtn = document.getElementById('check-btn');
     const nextBtn = document.getElementById('next-btn');
+    // NEW: Elements for responsive layout
+    const profileCard = document.getElementById('profile-card');
+    const appContainer = document.getElementById('app-container');
+    const body = document.body;
+
 
     // --- Data with English Translations ---
     const sentences = [
@@ -124,12 +129,37 @@ document.addEventListener('DOMContentLoaded', () => {
             causative_passive: '学生は先生に電気を消させられます。', causative_passive_en: 'The student is made to turn off the light by the teacher.',
             のに: '学生は電気を消したのに、部屋はまだ明るいです。', noni_en: 'Even though the student turned off the light, the room is still bright.'
         },
-    ];// --- State Variables ---
+    ];
+    // --- State Variables ---
     let currentSentence = {};
     let currentModification = '';
     const playerData = window.playerDataManager;
 
-    // --- NEW FUNCTION to scale font size based on text length ---
+    // --- NEW: Function to handle moving the profile card and its layout ---
+    const handleResponsiveLayout = () => {
+        const breakpoint = 1400; // The pixel width where the layout changes
+        const mainPanel = appContainer.querySelector('.main-panel');
+
+        if (!profileCard || !mainPanel || !body) {
+            console.error("Required elements for layout handling are missing.");
+            return; // Exit if key elements aren't found
+        }
+
+        if (window.innerWidth <= breakpoint) {
+            // On screens 1400px or less, the card is inside the main panel
+            if (profileCard.parentElement !== mainPanel) {
+                mainPanel.appendChild(profileCard);
+            }
+        } else {
+            // On larger screens, the card is a sibling to the app container
+            if (profileCard.parentElement !== body) {
+                body.insertBefore(profileCard, appContainer);
+            }
+        }
+    };
+
+
+    // --- FUNCTION to scale font size based on text length ---
     function adjustSentenceFontSize(sentenceText) {
         const textLength = sentenceText.length;
         const isMobile = window.innerWidth <= 680;
@@ -264,7 +294,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- Initialization ---
+    // --- Initialization & Resize Handling ---
     loadNewQuestion();
-});
+    handleResponsiveLayout(); // Call on initial load
 
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            handleResponsiveLayout();
+            if (currentSentence.original) {
+                adjustSentenceFontSize(currentSentence.original);
+            }
+        }, 250);
+    });
+});

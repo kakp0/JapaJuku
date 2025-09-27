@@ -62,40 +62,42 @@
 
     <!-- Main application container -->
     <div id="app-container">
-         <div class="app-header">
-             <a href="index.html" class="back-link"><i class="ph-bold ph-arrow-left"></i> Back to Hub</a>
-             <div class="theme-switcher-wrapper">
-                <i class="ph-bold ph-moon"></i>
-                <label class="theme-switcher">
-                    <input type="checkbox" id="theme-toggle">
-                    <span class="slider"></span>
-                </label>
-                <i class="ph-bold ph-sun"></i>
-            </div>
-        </div>
-        
-        <h1>Sentence Translation</h1>
-        <p class="subtitle">Translate the Japanese sentence into English.</p>
-
-        <div id="quiz-container">
-            <div id="prompt-area">
-                <div id="sentence-prompt-card">
-                    <p id="sentence-tag">Japanese Sentence</p>
-                    <h2 id="japanese-sentence-display">ここに文章が表示されます。</h2>
+        <div class="main-panel">
+            <div class="app-header">
+                <a href="index.html" class="back-link"><i class="ph-bold ph-arrow-left"></i> Back to Hub</a>
+                <div class="theme-switcher-wrapper">
+                    <i class="ph-bold ph-moon"></i>
+                    <label class="theme-switcher">
+                        <input type="checkbox" id="theme-toggle">
+                        <span class="slider"></span>
+                    </label>
+                    <i class="ph-bold ph-sun"></i>
                 </div>
             </div>
+            
+            <h1>Sentence Translation</h1>
+            <p class="subtitle">Translate the Japanese sentence into English.</p>
 
-            <div id="answer-area">
-                <input type="text" id="answer-input" placeholder="Enter the English translation" autocomplete="off">
-            </div>
+            <div id="quiz-container">
+                <div id="prompt-area">
+                    <div id="sentence-prompt-card">
+                        <p id="sentence-tag">Japanese Sentence</p>
+                        <h2 id="japanese-sentence-display">ここに文章が表示されます。</h2>
+                    </div>
+                </div>
 
-            <div id="feedback-area">
-                <!-- Feedback messages (correct/incorrect) will be injected here -->
-            </div>
+                <div id="answer-area">
+                    <input type="text" id="answer-input" placeholder="Enter the English translation" autocomplete="off">
+                </div>
 
-            <div id="controls">
-                <button id="check-btn">Check</button>
-                <button id="next-btn" style="display: none;">Next</button>
+                <div id="feedback-area">
+                    <!-- Feedback messages (correct/incorrect) will be injected here -->
+                </div>
+
+                <div id="controls">
+                    <button id="check-btn">Check</button>
+                    <button id="next-btn" style="display: none;">Next</button>
+                </div>
             </div>
         </div>
     </div>

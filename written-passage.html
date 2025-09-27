@@ -27,16 +27,17 @@
     <!-- Profile card -->
     <div id="profile-card">
         <div class="profile-header">
+            <!-- UPDATED: Profile picture is now a div for customization -->
             <div class="pfp-wrapper">
                 <div id="profile-picture" title="Customize your profile picture"></div>
                 <div id="pfp-color-picker" class="hidden">
                     <div class="color-input-group">
                         <label for="pfp-bg-color">Background</label>
-                        <input type="color" id="pfp-bg-color">
+                        <input type="color" id="pfp-bg-color" value="#007bff">
                     </div>
                     <div class="color-input-group">
                         <label for="pfp-text-color">Letter</label>
-                        <input type="color" id="pfp-text-color">
+                        <input type="color" id="pfp-text-color" value="#ffffff">
                     </div>
                 </div>
             </div>
@@ -55,6 +56,15 @@
             </div>
             <div class="xp-bar-container">
                 <div id="xp-bar"></div>
+            </div>
+        </div>
+        <!-- Level Up Animation Container -->
+        <div id="level-up-animation-container">
+            <div class="level-up-wipe"></div>
+            <div class="level-up-text">
+                <span>L</span><span>e</span><span>v</span><span>e</span><span>l</span>
+                <span class="level-up-space">&nbsp;</span>
+                <span>U</span><span>p</span><span>!</span>
             </div>
         </div>
     </div>

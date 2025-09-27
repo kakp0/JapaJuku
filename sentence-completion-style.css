@@ -209,8 +209,10 @@ button:disabled { background-color: #ced4da; cursor: not-allowed; }
 #next-btn { background-color: #28a745; }
 #next-btn:hover { background-color: #218838; }
 
-/* --- Media Queries --- */
-@media (max-width: 1100px) {
+/* --- Media Queries (NEWLY ADDED & UPDATED) --- */
+
+/* --- "Middle Zone" Integrated Layout --- */
+@media (max-width: 1400px) {
     body {
         display: flex;
         flex-direction: column;
@@ -227,13 +229,89 @@ button:disabled { background-color: #ced4da; cursor: not-allowed; }
         transform: none;
         left: auto;
         top: auto;
+    }
+
+    #app-container {
+        order: 1;
         width: 100%;
         max-width: 650px;
     }
+    
+    .main-panel #controls {
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    #profile-card {
+        order: 2;
+        width: 100%;
+        max-width: 650px;
+        background: transparent;
+        box-shadow: none;
+        padding: 0 2rem;
+        margin-top: 0;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+    }
+
+    .main-panel #profile-card .profile-header {
+        margin-bottom: 0;
+    }
+
+    .main-panel #profile-card .level-system {
+        flex-shrink: 0;
+        width: 220px;
+        margin-left: auto;
+    }
+    
+    .main-panel #profile-card .level-display {
+        justify-content: flex-start;
+        gap: 1rem;
+    }
 }
 
+/* --- Stacked Tablet & Mobile Layout --- */
+@media (max-width: 1100px) {
+    #profile-card {
+       order: -1;
+       display: block;
+       background-color: var(--card-bg-color);
+       padding: 1.5rem;
+       border-radius: 12px;
+       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+       margin-top: 0;
+       margin-bottom: 2rem;
+       max-width: 100%;
+       box-sizing: border-box;
+    }
+
+    .main-panel #controls {
+        border-bottom: none;
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+
+    .main-panel #profile-card .profile-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .main-panel #profile-card .level-system {
+        width: auto;
+        margin-left: 0;
+    }
+
+    .main-panel #profile-card .level-display {
+        justify-content: space-between;
+        gap: 0;
+    }
+}
+
+/* --- Mobile-Specific Portrait Design --- */
 @media (max-width: 680px) {
-    #app-container { padding: 1.5rem 1rem; }
+    #app-container { padding: 1.5rem 1rem; max-width: 100%;}
+    #profile-card { max-width: 100%; }
     h1 { font-size: 1.5rem; }
     .subtitle { font-size: 0.9rem; margin-bottom: 1.5rem; }
     .sentence-part { font-size: 1.5rem; }

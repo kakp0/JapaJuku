@@ -7,6 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const feedbackArea = document.getElementById('feedback-area');
     const checkBtn = document.getElementById('check-btn');
     const nextBtn = document.getElementById('next-btn');
+    const mainPanel = document.querySelector('.main-panel');
+    const profileCard = document.getElementById('profile-card');
+    const body = document.body;
 
     // --- Data ---
     const sentences = [
@@ -89,6 +92,32 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentSentenceType = null;
 
     // --- Functions ---
+    const handleResponsiveLayout = () => {
+        const breakpoint = 1400;
+        const mobileBreakpoint = 1100;
+
+        if (!profileCard || !mainPanel || !body) {
+            console.error("Required elements for layout handling are missing.");
+            return;
+        }
+
+        // Middle Zone (Integrated View) & Mobile Zone (Stacked View)
+        if (window.innerWidth <= breakpoint) {
+            // If card is not already in the main panel, move it there.
+            if (profileCard.parentElement !== mainPanel) {
+                mainPanel.appendChild(profileCard);
+            }
+        } 
+        // Desktop Zone
+        else {
+            // If card is not already a direct child of the body, move it back.
+            if (profileCard.parentElement !== body) {
+                 // Place it before the app-container to maintain a consistent DOM structure for CSS.
+                 body.insertBefore(profileCard, document.getElementById('app-container'));
+            }
+        }
+    };
+
     function getRandomItem(arr) {
         return arr[Math.floor(Math.random() * arr.length)];
     }
@@ -191,7 +220,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(handleResponsiveLayout, 250);
+    });
+
     // --- Initialization ---
     loadNewQuestion();
+    handleResponsiveLayout();
 });
 

@@ -7,7 +7,7 @@ body {
     margin: 0;
     color: var(--text-color);
     box-sizing: border-box;
-    transition: background-color 0.3s, color 0.3s;
+    transition: background-color: 0.3s, color 0.3s;
     overflow-x: hidden;
 }
 
@@ -236,7 +236,9 @@ button:disabled { background-color: #ced4da; cursor: not-allowed; }
 #next-btn:hover { background-color: #218838; }
 
 /* --- Media Queries --- */
-@media (max-width: 1250px) { /* Adjusted breakpoint */
+
+/* --- "Middle Zone" Integrated Layout --- */
+@media (max-width: 1400px) {
     body {
         display: flex;
         flex-direction: column;
@@ -253,12 +255,103 @@ button:disabled { background-color: #ced4da; cursor: not-allowed; }
         transform: none;
         left: auto;
         top: auto;
+    }
+
+    #app-container {
+        order: 1; /* App content appears first */
         width: 100%;
         max-width: 800px;
     }
+    
+    /* ADDED: This rule creates the divider within the main content area */
+    .main-panel #controls {
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Styles for the INTEGRATED Profile Card */
+    #profile-card {
+        order: 2; /* Profile card appears after the main content */
+        width: 100%;
+        max-width: 800px;
+        background: transparent;
+        border-top: none; /* The divider is now on #controls */
+        box-shadow: none;
+        padding: 0 2rem; /* Add horizontal padding to match the main content above */
+        margin-top: 0; /* Space is now handled by #controls */
+        box-sizing: border-box; /* Ensures padding is contained within the element's width */
+        
+        display: flex;
+        align-items: center;
+    }
+
+    .main-panel #profile-card .profile-header {
+        margin-bottom: 0;
+    }
+
+    .main-panel #profile-card .level-system {
+        flex-shrink: 0;
+        width: 220px;
+        margin-left: auto; /* This pushes the level system to the far right */
+    }
+    
+    .main-panel #profile-card .level-display {
+        justify-content: flex-start;
+        gap: 1rem;
+    }
 }
 
+/* --- Stacked Tablet & Mobile Layout --- */
+@media (max-width: 1100px) {
+    /* Restore the card's appearance and move it to the top */
+    #profile-card {
+       order: -1; /* Move profile card back to the top */
+       display: block; /* Revert from flex */
+       background-color: var(--card-bg-color); /* Restore card look */
+       padding: 1.5rem;
+       border-radius: 12px;
+       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+       margin-top: 0; /* Reset margin */
+       margin-bottom: 2rem; /* Add space below card */
+       max-width: 100%; /* Prevent overflow on small screens */
+       box-sizing: border-box; /* Ensure padding is inside the width */
+       border-top: none; /* Removes the divider line from the integrated layout */
+    }
+
+    /* ADDED: This removes the divider when the layout stacks */
+    .main-panel #controls {
+        border-bottom: none;
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+
+    .main-panel #profile-card .profile-header {
+        margin-bottom: 1.5rem; /* Restore bottom margin */
+    }
+
+    .main-panel #profile-card .level-system {
+        width: auto;
+        margin-left: 0; /* Reset margin for stacked layout */
+    }
+
+    .main-panel #profile-card .level-display {
+        justify-content: space-between; /* Restore default alignment */
+        gap: 0;
+    }
+}
+
+/* --- Mobile-Specific Portrait Design --- */
 @media (max-width: 680px) {
+    body {
+        gap: 1.5rem; /* Reduce gap for stacking */
+        padding: 1.5rem 1rem;
+    }
+
+    #profile-card {
+        margin-bottom: 1.5rem;
+    }
+
     #app-container { padding: 1.5rem 1rem; }
     h1 { font-size: 1.5rem; }
     .subtitle { font-size: 0.9rem; margin-bottom: 1.5rem; }
@@ -285,3 +378,4 @@ button:disabled { background-color: #ced4da; cursor: not-allowed; }
         box-sizing: border-box; /* Ensures padding is inside the width */
     }
 }
+

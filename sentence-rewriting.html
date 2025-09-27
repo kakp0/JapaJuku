@@ -61,53 +61,56 @@
 
     <!-- Main application container -->
     <div id="app-container">
-         <div class="app-header">
-             <a href="index.html" class="back-link"><i class="ph-bold ph-arrow-left"></i> Back to Hub</a>
-             <div class="theme-switcher-wrapper">
-                <i class="ph-bold ph-moon"></i>
-                <label class="theme-switcher">
-                    <input type="checkbox" id="theme-toggle">
-                    <span class="slider"></span>
-                </label>
-                <i class="ph-bold ph-sun"></i>
-            </div>
-        </div>
-        
-        <h1>Sentence Rewriting</h1>
-        <p class="subtitle">Practice Causative, Passive, and のに grammar points.</p>
-
-        <div id="quiz-container">
-            <div id="prompt-area">
-                <div id="sentence-prompt-card">
-                    <p id="sentence-tag">Original Sentence</p>
-                    <h2 id="sentence-display">ここに文章が表示されます。</h2>
-                </div>
-                <div class="arrow-indicator">
-                    <i class="ph-bold ph-arrow-right"></i>
-                </div>
-                <div id="modifier-prompt-card">
-                    <p id="modifier-tag">Modification</p>
-                    <h3 id="modifier-display">Causative</h3>
-                </div>
-            </div>
-            
-            <!-- Hint Area Added -->
-            <div id="hint-area">
-                <p id="translation-hint"></p>
-            </div>
-
-            <div id="answer-area">
-                <input type="text" id="answer-input" placeholder="Enter the rewritten sentence" autocomplete="off" lang="ja">
-            </div>
-
-            <div id="feedback-area">
-                <!-- Feedback messages will be injected here -->
-            </div>
-
-            <div id="controls">
-                <button id="check-btn">Check</button>
-                <button id="next-btn" style="display: none;">Next</button>
-            </div>
+         <!-- NEW: main-panel wrapper for layout control -->
+         <div class="main-panel">
+            <div class="app-header">
+                <a href="index.html" class="back-link"><i class="ph-bold ph-arrow-left"></i> Back to Hub</a>
+                <div class="theme-switcher-wrapper">
+                   <i class="ph-bold ph-moon"></i>
+                   <label class="theme-switcher">
+                       <input type="checkbox" id="theme-toggle">
+                       <span class="slider"></span>
+                   </label>
+                   <i class="ph-bold ph-sun"></i>
+               </div>
+           </div>
+           
+           <h1>Sentence Rewriting</h1>
+           <p class="subtitle">Practice Causative, Passive, and のに grammar points.</p>
+   
+           <div id="quiz-container">
+               <div id="prompt-area">
+                   <div id="sentence-prompt-card">
+                       <p id="sentence-tag">Original Sentence</p>
+                       <h2 id="sentence-display">ここに文章が表示されます。</h2>
+                   </div>
+                   <div class="arrow-indicator">
+                       <i class="ph-bold ph-arrow-right"></i>
+                   </div>
+                   <div id="modifier-prompt-card">
+                       <p id="modifier-tag">Modification</p>
+                       <h3 id="modifier-display">Causative</h3>
+                   </div>
+               </div>
+               
+               <!-- Hint Area Added -->
+               <div id="hint-area">
+                   <p id="translation-hint"></p>
+               </div>
+   
+               <div id="answer-area">
+                   <input type="text" id="answer-input" placeholder="Enter the rewritten sentence" autocomplete="off" lang="ja">
+               </div>
+   
+               <div id="feedback-area">
+                   <!-- Feedback messages will be injected here -->
+               </div>
+   
+               <div id="controls">
+                   <button id="check-btn">Check</button>
+                   <button id="next-btn" style="display: none;">Next</button>
+               </div>
+           </div>
         </div>
     </div>
 

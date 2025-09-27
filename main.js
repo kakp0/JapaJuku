@@ -2,14 +2,14 @@
     // --- Configuration ---
     const PLAYER_DATA_KEY = 'japaneseLearnerProgress';
     const THEME_KEY = 'japaneseLearnerTheme';
-    const XP_PER_LEVEL = 100;
+    const BASE_XP_PER_LEVEL = 100; // XP needed to go from Lvl 1 to Lvl 2
 
-    // --- NEW: Centralized XP Rewards Configuration ---
-    // This is the single spot where you can edit all XP values for different activities.
-    const xpRewards = {
+    // --- NEW: Centralized BASE XP Rewards Configuration ---
+    // These are the base XP values for Level 1. They will scale with the player's level.
+    const baseXpRewards = {
         // Kanji Practice (Values are ready for when you implement this)
         kanjiPracticeGrade: 0.3,
-        kanjiQuizRateAnswer: 10,
+        kanjiQuizRateAnswer: 15,
         kanjiReadingCorrectNormal: 5,
         kanjiReadingCorrectHard: 8,
 
@@ -26,19 +26,20 @@
         sentenceTranslationCorrect: 10,
 
         // Written Passage (XP awarded for every 5 characters written)
-        passageCharactersWritten: 2,
+        passageCharactersWritten: 5,
     };
 
 
     // --- Tiers Configuration ---
-    // Tier 1: Common, Tier 2: Uncommon, Tier 3: Rare, Tier 4: Epic, Tier 5: Mythic, Tier 6: Legendary
+    // Tier 1: Common, Tier 2: Uncommon, Tier 3: Rare, Tier 4: Epic, Tier 5: Mythic, Tier 6: Legendary, Tier 7: Legend
     const titleTiers = {
         1: { name: 'Common' },
         2: { name: 'Uncommon' },
         3: { name: 'Rare' },
         4: { name: 'Epic' },
         5: { name: 'Mythic' },
-        6: { name: 'Legendary' }
+        6: { name: 'Legendary' },
+        7: { name: 'Legend' } // NEW TIER
     };
 
     // --- Achievements Data ---
@@ -50,7 +51,7 @@
         { id: 'level_10', name: 'Adept', description: 'Reach Level 10.', tier: 3, requirement: { type: 'stat', stat: 'level', value: 10 }, category: 'general' },
         { id: 'level_20', name: 'Scholar', description: 'Reach Level 20.', tier: 4, requirement: { type: 'stat', stat: 'level', value: 20 }, category: 'general' },
         { id: 'level_50', name: 'Master', description: 'Reach Level 50.', tier: 5, requirement: { type: 'stat', stat: 'level', value: 50 }, category: 'general' },
-        { id: 'level_100', name: 'Shogun', description: 'Reach Level 100.', tier: 6, requirement: { type: 'stat', stat: 'level', value: 100 }, category: 'general' },
+        { id: 'level_100', name: '将軍', description: 'Reach Level 100.', tier: 6, requirement: { type: 'stat', stat: 'level', value: 100 }, category: 'general' },
 
         // Kanji Achievements
         { id: 'kanji_draw_score_80', name: 'Getting the Hang of It', description: 'Score 80%+ on a Kanji drawing.', tier: 1, requirement: { type: 'stat', stat: 'kanjiDrawingHighScore', value: 80 }, category: 'kanji' },
@@ -147,7 +148,10 @@
         { id: 'rewrite_passive_50', name: 'The Receiver', description: 'Correctly rewrite 50 passive sentences.', tier: 2, requirement: { type: 'stat', stat: 'sentenceRewritingCorrectPassive', value: 50 }, category: 'rewriting' },
         { id: 'rewrite_causative_passive_25', name: 'Tongue Twister', description: 'Correctly rewrite 25 causative-passive sentences.', tier: 3, requirement: { type: 'stat', stat: 'sentenceRewritingCorrectCausativePassive', value: 25 }, category: 'rewriting' },
         { id: 'rewrite_noni_50', name: 'Despite Everything...', description: 'Correctly rewrite 50 sentences with 「のに」.', tier: 2, requirement: { type: 'stat', stat: 'sentenceRewritingCorrectNoni', value: 50 }, category: 'rewriting' },
-        { id: 'rewrite_alchemist', name: 'Grammar Alchemist', description: 'Rewrite 10 sentences of each type.', tier: 4, requirement: { type: 'compound', stats: [{stat: 'sentenceRewritingCorrectCausative', value: 10}, {stat: 'sentenceRewritingCorrectPassive', value: 10}, {stat: 'sentenceRewritingCorrectCausativePassive', value: 10}, {stat: 'sentenceRewritingCorrectNoni', value: 10}] }, category: 'rewriting' }
+        { id: 'rewrite_alchemist', name: 'Grammar Alchemist', description: 'Rewrite 10 sentences of each type.', tier: 4, requirement: { type: 'compound', stats: [{stat: 'sentenceRewritingCorrectCausative', value: 10}, {stat: 'sentenceRewritingCorrectPassive', value: 10}, {stat: 'sentenceRewritingCorrectCausativePassive', value: 10}, {stat: 'sentenceRewritingCorrectNoni', value: 10}] }, category: 'rewriting' },
+
+        // NEW: Ultimate Achievement
+        { id: 'legend_japajuku', name: 'JapaJuku Legend', description: 'Unlock every other achievement.', tier: 7, requirement: { type: 'all_achievements' }, category: 'legend' }
     ];
 
     // --- Player Data Manager ---
@@ -165,10 +169,20 @@
             if (savedData) {
                 this.isNewUser = false;
                 this.data = JSON.parse(savedData);
-                // ADDED: Ensure pfp data exists for returning users
+                const defaults = this.getDefaults();
+                // Ensure pfp data exists for returning users
                 if (!this.data.profile.pfp) {
-                    this.data.profile.pfp = this.getDefaults().profile.pfp;
+                    this.data.profile.pfp = defaults.profile.pfp;
                 }
+                // Ensure settings object and new properties exist for returning users
+                if (!this.data.settings) {
+                    this.data.settings = defaults.settings;
+                }
+                if (this.data.settings.useLegendaryNameStyle === undefined) {
+                    this.data.settings.useLegendaryNameStyle = defaults.settings.useLegendaryNameStyle;
+                }
+
+
                 const savedAchievements = this.data.achievements || [];
                 this.data.achievements = achievementsList.map(masterAch => {
                     const savedAch = savedAchievements.find(a => a.id === masterAch.id);
@@ -207,17 +221,21 @@
             }
         },
         getDefaults() {
+            const isMobile = window.matchMedia('(max-width: 900px)').matches;
             return {
                 profile: { 
                     name: 'Learner', 
                     level: 1, 
                     xp: 0, 
                     equippedTitleId: null,
-                    // ADDED: Default colors for the profile picture
                     pfp: {
                         bgColor: '#007bff',
                         textColor: '#ffffff'
                     }
+                },
+                settings: {
+                    showPlayerCardEverywhere: !isMobile,
+                    useLegendaryNameStyle: true // NEW setting
                 },
                 stats: { 
                     level: 1,
@@ -303,17 +321,32 @@
             }
             this.updateAllUI();
         },
+        // NEW: Function to unlock all achievements for debugging
+        unlockAllAchievements() {
+            this.data.achievements.forEach(ach => {
+                ach.unlocked = true;
+                ach.progress = 100;
+            });
+            this.checkAchievements(); // Re-check to update legend achievement state
+            this.save();
+            console.log("DEBUG: All achievements have been unlocked.");
+            // Also show the legendary name setting if it's now unlocked
+            const settingItem = document.getElementById('legendary-name-setting');
+            const legendaryNameToggle = document.getElementById('legendary-name-toggle');
+            if (settingItem && legendaryNameToggle) {
+                settingItem.style.display = 'flex';
+                legendaryNameToggle.checked = this.getData().settings.useLegendaryNameStyle;
+            }
+        },
         getData() { return this.data; },
         setName(name) { this.data.profile.name = name; this.save(); },
         equipTitle(titleId) { this.data.profile.equippedTitleId = titleId; this.save(); },
-        // ADDED: Method to save profile picture colors
         setPfpColor(type, color) {
             if (type === 'bg') {
                 this.data.profile.pfp.bgColor = color;
             } else if (type === 'text') {
                 this.data.profile.pfp.textColor = color;
             }
-            // Save is called separately in the event listener to avoid saving on every 'input' event
             try {
                 localStorage.setItem(PLAYER_DATA_KEY, JSON.stringify(this.data));
             } catch (e) {
@@ -322,22 +355,63 @@
         },
         increaseStat(stat, amount) { if (this.data.stats[stat] === undefined) this.data.stats[stat] = 0; this.data.stats[stat] += amount; this.checkAchievements(); this.save(); },
         setStat(stat, value) { if (this.data.stats[stat] === undefined || value > this.data.stats[stat]) { this.data.stats[stat] = value; } this.checkAchievements(); this.save(); },
-        addXp(amount) { const p = this.data.profile; p.xp += amount; let nextLvlXp = XP_PER_LEVEL; while (p.xp >= nextLvlXp) { p.xp -= nextLvlXp; p.level++; this.setStat('level', p.level); nextLvlXp = XP_PER_LEVEL; } this.save(); },
         
-        // --- NEW: Centralized function to award XP based on an activity ID ---
+        // NEW: Helper function to calculate level-up cost
+        getXpForNextLevel(level) {
+            return BASE_XP_PER_LEVEL * level;
+        },
+
+        // MODIFIED: This function now detects level-ups and calls the animation trigger.
+        addXp(amount) {
+            const p = this.data.profile;
+            const levelBefore = p.level;
+            p.xp += amount;
+            let nextLvlXp = this.getXpForNextLevel(p.level);
+            let leveledUp = false;
+
+            // Use a while loop in case they earn enough XP for multiple levels at once
+            while (p.xp >= nextLvlXp) {
+                p.xp -= nextLvlXp;
+                p.level++;
+                this.setStat('level', p.level);
+                nextLvlXp = this.getXpForNextLevel(p.level);
+                leveledUp = true;
+            }
+
+            // If a level up happened, trigger the animation.
+            if (leveledUp) {
+                // The UI will update behind the animation. When the wipe reveals the card,
+                // the new level and XP values will be shown.
+                triggerLevelUpAnimation();
+            }
+
+            this.save();
+        },
+        
         rewardXp(activityId) {
-            const amount = xpRewards[activityId];
-            if (amount) {
-                this.addXp(amount);
+            const baseAmount = baseXpRewards[activityId];
+            if (baseAmount) {
+                // Calculate the deterministic, scaled amount first
+                const scaledAmount = baseAmount * this.data.profile.level;
+
+                // Create a random multiplier between 0.9 and 1.1
+                const randomMultiplier = Math.random() * 0.2 + 0.9; // (Math.random() * (max - min) + min)
+
+                // Apply the randomness and round to the nearest whole number
+                const randomizedAmount = Math.round(scaledAmount * randomMultiplier);
+
+                this.addXp(randomizedAmount);
             } else {
-                // This warning helps you find if you've misspelled an activity ID
                 console.warn(`XP reward not found for activity: ${activityId}`);
             }
         },
 
         checkAchievements() {
+            let newlyUnlockedCount = 0;
+
+            // First pass for regular achievements
             this.data.achievements.forEach(ach => {
-                if (!ach.requirement) return;
+                if (!ach.requirement || ach.requirement.type === 'all_achievements') return;
 
                 let isUnlocked = false;
                 let currentProgress = 0;
@@ -366,10 +440,34 @@
                         showAchievementPopup(ach);
                     }
                     ach.progress = 100;
+                    newlyUnlockedCount++;
                 } else {
                     ach.progress = totalProgress > 0 ? Math.floor((currentProgress / totalProgress) * 100) : 0;
                 }
             });
+
+            // Second pass for the legend achievement
+            const legendAchievement = this.data.achievements.find(ach => ach.id === 'legend_japajuku');
+            if (legendAchievement) {
+                const allOtherAchievements = this.data.achievements.filter(a => a.id !== 'legend_japajuku');
+                const unlockedCount = allOtherAchievements.filter(a => a.unlocked).length;
+                const totalCount = allOtherAchievements.length;
+                
+                if (unlockedCount === totalCount) {
+                    if (!legendAchievement.unlocked) {
+                        legendAchievement.unlocked = true;
+                        showAchievementPopup(legendAchievement);
+                        // Make the setting visible immediately
+                        const settingItem = document.getElementById('legendary-name-setting');
+                        if (settingItem) settingItem.style.display = 'flex';
+                    }
+                    legendAchievement.progress = 100;
+                } else {
+                    legendAchievement.progress = Math.floor((unlockedCount / totalCount) * 100);
+                }
+            }
+
+
             if (this.data.profile.equippedTitleId === null && this.data.achievements.find(a => a.id === 'level_1')?.unlocked) {
                 this.data.profile.equippedTitleId = 'level_1';
             }
@@ -389,13 +487,23 @@
         };
         if (!els.name) return;
         const p = data.profile;
-        const nextLvlXp = XP_PER_LEVEL;
+        const nextLvlXp = playerDataManager.getXpForNextLevel(p.level);
+        
         els.name.textContent = p.name;
+        
+        // NEW: Legendary Name Style Logic
+        const legendAchievement = data.achievements.find(ach => ach.id === 'legend_japajuku');
+        const useLegendaryStyle = data.settings.useLegendaryNameStyle;
+        if (legendAchievement && legendAchievement.unlocked && useLegendaryStyle) {
+            els.name.classList.add('legendary-name');
+        } else {
+            els.name.classList.remove('legendary-name');
+        }
+
         els.level.textContent = p.level;
         els.xp.textContent = `${Math.floor(p.xp)} / ${nextLvlXp} XP`;
         els.bar.style.width = `${(p.xp / nextLvlXp) * 100}%`;
 
-        // ADDED: Update profile picture
         if (els.pfp) {
             const initial = p.name.charAt(0).toUpperCase() || '?';
             els.pfp.textContent = initial;
@@ -408,11 +516,12 @@
         const equipped = data.achievements.find(a => a.id === p.equippedTitleId);
         if (equipped && equipped.unlocked) {
             els.title.textContent = equipped.name;
-            els.title.className = 'title-tier-0'; // Reset class
+            els.title.className = 'player-title'; // Reset class
             els.title.classList.add(`title-tier-${equipped.tier}`);
         } else {
             els.title.textContent = 'Newbie';
-            els.title.className = 'title-tier-1';
+            els.title.className = 'player-title';
+            els.title.classList.add('title-tier-1');
         }
     }
     
@@ -420,7 +529,6 @@
         const listEl = document.getElementById('titles-list');
         if (!listEl) return;
 
-        // Sort achievements by tier (ascending)
         const sortedAchievements = [...data.achievements].sort((a, b) => (a.tier || 0) - (b.tier || 0));
 
         listEl.innerHTML = '';
@@ -433,7 +541,6 @@
             titleView.className = 'title-view';
             const text = document.createElement('span');
             text.className = 'title-text';
-            // Only add tier class if the title is unlocked
             if (ach.unlocked) {
                 text.classList.add(`title-tier-${ach.tier}`);
             }
@@ -459,6 +566,11 @@
                          targetTotal += req.value;
                      });
                      progressText = `${currentTotal} / ${targetTotal}`;
+                } else if (ach.requirement.type === 'all_achievements') {
+                    const allOtherAchievements = data.achievements.filter(a => a.id !== 'legend_japajuku');
+                    const unlockedCount = allOtherAchievements.filter(a => a.unlocked).length;
+                    const totalCount = allOtherAchievements.length;
+                    progressText = `${unlockedCount} / ${totalCount}`;
                 }
             }
             
@@ -551,7 +663,7 @@
         });
     }
 
-    // ADDED: Function to handle profile picture editor logic
+    // --- Profile Picture Editor ---
     function setupPfpEditor() {
         const pfpEl = document.getElementById('profile-picture');
         const pickerEl = document.getElementById('pfp-color-picker');
@@ -560,41 +672,129 @@
 
         if (!pfpEl || !pickerEl || !bgInput || !textInput) return;
 
-        // Set initial values for color pickers from player data
         const currentPfpData = playerDataManager.getData().profile.pfp;
         if (currentPfpData) {
             bgInput.value = currentPfpData.bgColor;
             textInput.value = currentPfpData.textColor;
         }
 
-        // Toggle picker visibility
         pfpEl.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent click from bubbling to the document
+            e.stopPropagation(); 
             pickerEl.classList.toggle('hidden');
         });
 
-        // Close picker when clicking outside
         document.addEventListener('click', (e) => {
             if (!pickerEl.contains(e.target) && !pfpEl.contains(e.target)) {
                 pickerEl.classList.add('hidden');
             }
         });
 
-        // Handle background color changes
-        bgInput.addEventListener('input', () => {
-            pfpEl.style.backgroundColor = bgInput.value;
-        });
-        bgInput.addEventListener('change', () => { // 'change' fires when picker is closed
-            playerDataManager.setPfpColor('bg', bgInput.value);
+        bgInput.addEventListener('input', () => { pfpEl.style.backgroundColor = bgInput.value; });
+        bgInput.addEventListener('change', () => { playerDataManager.setPfpColor('bg', bgInput.value); });
+
+        textInput.addEventListener('input', () => { pfpEl.style.color = textInput.value; });
+        textInput.addEventListener('change', () => { playerDataManager.setPfpColor('text', textInput.value); });
+    }
+    
+    // --- Player Card Visibility Manager ---
+    function applyPlayerCardVisibility() {
+        // This function should only affect module pages, not the main hub.
+        // We can detect a module page by the presence of an #app-container.
+        const isModulePage = document.getElementById('app-container');
+        if (!isModulePage) {
+            return; // Do nothing on the main hub page
+        }
+
+        const shouldShow = playerDataManager.getData().settings.showPlayerCardEverywhere;
+        document.body.classList.toggle('hide-player-card-globally', !shouldShow);
+    }
+    
+    // --- Settings Popup ---
+    function setupSettings() {
+        const settingsBtn = document.getElementById('settings-btn');
+        const settingsOverlay = document.getElementById('settings-overlay');
+        const settingsCloseBtn = document.getElementById('settings-close-btn');
+        const showPlayerCardToggle = document.getElementById('show-player-card-toggle');
+        const eraseDataBtn = document.getElementById('erase-data-btn');
+        const confirmOverlay = document.getElementById('confirm-overlay');
+        const confirmYesBtn = document.getElementById('confirm-yes-btn');
+        const confirmNoBtn = document.getElementById('confirm-no-btn');
+        const legendaryNameSetting = document.getElementById('legendary-name-setting');
+        const legendaryNameToggle = document.getElementById('legendary-name-toggle');
+
+        if (!settingsBtn || !settingsOverlay) return;
+
+        // Open/Close logic
+        settingsBtn.addEventListener('click', () => settingsOverlay.classList.remove('hidden'));
+        settingsCloseBtn.addEventListener('click', () => settingsOverlay.classList.add('hidden'));
+        settingsOverlay.addEventListener('click', (e) => {
+            if (e.target === settingsOverlay) settingsOverlay.classList.add('hidden');
         });
 
-        // Handle text color changes
-        textInput.addEventListener('input', () => {
-            pfpEl.style.color = textInput.value;
+        // Legendary Name Toggle Logic
+        if (legendaryNameSetting && legendaryNameToggle) {
+            const legendAchievement = playerDataManager.getData().achievements.find(ach => ach.id === 'legend_japajuku');
+            if (legendAchievement && legendAchievement.unlocked) {
+                legendaryNameSetting.style.display = 'flex';
+                legendaryNameToggle.checked = playerDataManager.getData().settings.useLegendaryNameStyle;
+                legendaryNameToggle.addEventListener('change', () => {
+                    playerDataManager.getData().settings.useLegendaryNameStyle = legendaryNameToggle.checked;
+                    playerDataManager.save(); // This re-renders the UI
+                });
+            } else {
+                legendaryNameSetting.style.display = 'none';
+            }
+        }
+
+        // "Show player card" toggle logic
+        if (showPlayerCardToggle) {
+            showPlayerCardToggle.checked = playerDataManager.getData().settings.showPlayerCardEverywhere;
+            showPlayerCardToggle.addEventListener('change', () => {
+                playerDataManager.getData().settings.showPlayerCardEverywhere = showPlayerCardToggle.checked;
+                playerDataManager.save();
+                applyPlayerCardVisibility(); // Apply the change visually right away
+            });
+        }
+
+        // Erase data logic
+        eraseDataBtn.addEventListener('click', () => confirmOverlay.classList.remove('hidden'));
+        confirmNoBtn.addEventListener('click', () => confirmOverlay.classList.add('hidden'));
+        confirmOverlay.addEventListener('click', (e) => {
+             if (e.target === confirmOverlay) confirmOverlay.classList.add('hidden');
         });
-        textInput.addEventListener('change', () => {
-            playerDataManager.setPfpColor('text', textInput.value);
+        confirmYesBtn.addEventListener('click', () => {
+            try {
+                localStorage.removeItem(PLAYER_DATA_KEY);
+                localStorage.removeItem(THEME_KEY);
+                location.reload();
+            } catch (e) {
+                console.error("Could not erase data from localStorage:", e);
+                confirmOverlay.classList.add('hidden');
+            }
         });
+    }
+
+    // --- NEW: Level Up Animation Trigger ---
+    function triggerLevelUpAnimation() {
+        const profileCard = document.getElementById('profile-card');
+        if (!profileCard || profileCard.classList.contains('is-leveling-up')) return;
+
+        profileCard.classList.add('is-leveling-up');
+        
+        // The .level-up-wipe element's animation dictates the total duration of the effect.
+        // We'll listen for its animation to end to know when to clean up.
+        const wipeElement = profileCard.querySelector('.level-up-wipe');
+        
+        const cleanup = () => {
+            profileCard.classList.remove('is-leveling-up');
+        };
+        
+        if (wipeElement) {
+            wipeElement.addEventListener('animationend', cleanup, { once: true });
+        } else {
+            // Fallback timer in case the wipe element isn't found.
+            setTimeout(cleanup, 3500);
+        }
     }
 
     // --- Initializations ---
@@ -602,7 +802,9 @@
         playerDataManager.init();
         themeManager.init();
         setupWelcomePopup();
-        setupPfpEditor(); // ADDED
+        setupPfpEditor();
+        setupSettings();
+        applyPlayerCardVisibility(); // Apply visibility setting on page load
         
         const nameEl = document.getElementById('player-name');
         if (nameEl && nameEl.hasAttribute('contenteditable') && nameEl.getAttribute('contenteditable') === 'true') {
@@ -630,6 +832,27 @@
             }
         });
         
+        // NEW: Cheat code for unlocking all achievements
+        let keySequence = [];
+        const cheatCode = 'TOOLAZY';
+        document.addEventListener('keyup', (e) => {
+
+            if (!window.location.pathname.endsWith('/') && !window.location.pathname.endsWith('index.html')) {
+                return;
+            }
+            keySequence.push(e.key.toUpperCase());
+            // Keep the sequence only as long as the cheat code
+            if (keySequence.length > cheatCode.length) {
+                keySequence.shift();
+            }
+            if (keySequence.join('') === cheatCode) {
+                console.log('Cheat code activated: Unlocking all achievements.');
+                playerDataManager.unlockAllAchievements();
+                keySequence = []; // Reset after use
+            }
+        });
+        
         window.playerDataManager = playerDataManager;
     });
 })();
+
