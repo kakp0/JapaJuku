@@ -788,6 +788,9 @@
 
     // --- NEW: Level Up Animation Trigger ---
     function triggerLevelUpAnimation() {
+        if (window.innerWidth < 1800) {     
+            return;
+        }
         const profileCard = document.getElementById('profile-card');
         if (!profileCard || profileCard.classList.contains('is-leveling-up')) return;
 
@@ -867,3 +870,4 @@
         window.playerDataManager = playerDataManager;
     });
 })();
+
