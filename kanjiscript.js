@@ -18,7 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainPanel = document.querySelector('.main-panel');
     const profileCard = document.getElementById('profile-card');
     const body = document.body;
+    const modal = document.getElementById('status-modal'); // MOVED to global scope
     let isDrawing = false, lastX = 0, lastY = 0;
+    let countdownInterval = null; // MOVED to global scope
 
     // --- Generic Drawing Functions ---
     const getCoords = (canvas, e) => {
@@ -147,8 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Drawing Quiz Mode ---
     const drawingQuiz = (() => {
         const userCanvas = document.getElementById('quizUserCanvas'), answerCanvas = document.getElementById('quizAnswerCanvas'), userCtx = userCanvas.getContext('2d'), answerCtx = answerCanvas.getContext('2d'), revealBtn = document.getElementById('quiz-reveal-btn'), clearBtn = document.getElementById('quiz-clear-btn'), onDisplay = document.getElementById('quiz-on'), kunDisplay = document.getElementById('quiz-kun'), enDisplay = document.getElementById('quiz-en'), ratingButtons = document.getElementById('quiz-rating-buttons'), noCardsMessage = document.getElementById('no-cards-message'), quizUI = document.getElementById('quiz-canvas-wrapper'), mainActions = document.querySelector('.quiz-main-actions'), promptEl = document.getElementById('quiz-prompt');
-        const statusBtn = document.getElementById('deck-status-btn'), modal = document.getElementById('status-modal'), modalClose = document.querySelector('.modal-close'), learningList = document.getElementById('learning-list'), reviewList = document.getElementById('review-list'), unseenList = document.getElementById('unseen-list'), learningCount = document.getElementById('learning-count'), reviewCount = document.getElementById('review-count'), unseenCount = document.getElementById('unseen-count');
-        let currentKanji = null, countdownInterval = null;
+        const statusBtn = document.getElementById('deck-status-btn'), modalClose = document.querySelector('.modal-close'), learningList = document.getElementById('learning-list'), reviewList = document.getElementById('review-list'), unseenList = document.getElementById('unseen-list'), learningCount = document.getElementById('learning-count'), reviewCount = document.getElementById('review-count'), unseenCount = document.getElementById('unseen-count');
+        let currentKanji = null;
 
         const getDeckState = () => { let state = JSON.parse(localStorage.getItem(DECK_STATE_KEY)); if (!state || !state.unseen || !state.learning || !state.review) { state = { unseen: allKanji.map(k => k.char), learning: [], review: {} }; } while (state.learning.length < LEARNING_BUFFER_SIZE && state.unseen.length > 0) { state.learning.push(state.unseen.shift()); } return state; };
         const saveDeckState = (state) => { localStorage.setItem(DECK_STATE_KEY, JSON.stringify(state)); if (window.playerDataManager) window.playerDataManager.setStat('kanjiInReview', Object.keys(state.review).length); };
@@ -227,7 +229,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 userCanvas.addEventListener('mousedown', startDrawing); userCanvas.addEventListener('mousemove', draw); userCanvas.addEventListener('mouseup', stopDrawing); userCanvas.addEventListener('mouseout', stopDrawing); userCanvas.addEventListener('touchstart', startDrawing); userCanvas.addEventListener('touchmove', draw); userCanvas.addEventListener('touchend', stopDrawing);
                 revealBtn.addEventListener('click', revealAnswer); clearBtn.addEventListener('click', clearUserCanvas); ratingButtons.addEventListener('click', handleRating); statusBtn.addEventListener('click', openStatusModal); modalClose.addEventListener('click', closeStatusModal); window.addEventListener('click', (e) => { if (e.target == modal) closeStatusModal(); });
             },
-            loadNextQuestion
+            loadNextQuestion,
+            openStatusModal // EXPOSED for external use
         };
     })();
 
@@ -307,12 +310,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- App Initialization ---
     const resetAllTimers = () => {
-        // UPDATED: Removed confirm() dialog
         localStorage.removeItem(DECK_STATE_KEY); 
         if(window.playerDataManager) window.playerDataManager.increaseStat('kanjiDeckResets', 1); 
+
+        // Check if the main drawing quiz is active and reload its question
         if (drawingQuizContainer.style.display === 'block') { 
             drawingQuiz.loadNextQuestion(); 
         } 
+
+        // NEW: Check if the status modal is open and refresh it
+        if (modal && modal.style.display === 'flex') {
+            // Stop the old countdown timer to prevent it from running in the background
+            clearInterval(countdownInterval);
+            // Re-run the function that builds the modal's content
+            drawingQuiz.openStatusModal(); 
+        }
     };
     
     practiceModeBtn.addEventListener('click', () => switchToMode(practiceContainer, practiceModeBtn));
@@ -332,4 +344,3 @@ document.addEventListener('DOMContentLoaded', () => {
     handleResponsiveLayout();
     switchToMode(practiceContainer, practiceModeBtn);
 });
-
