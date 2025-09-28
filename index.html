@@ -26,9 +26,19 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
-        /* This style prevents a horizontal and vertical scrollbar from appearing */
-        html, body {
-            overflow: hidden;
+        /* This style prevents a horizontal and vertical scrollbar from appearing on larger screens */
+        @media (min-width: 901px) {
+            html, body {
+                overflow: hidden;
+            }
+        }
+
+        /* On mobile devices (900px or less), allow vertical scrolling */
+        @media (max-width: 900px) {
+             html, body {
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
         }
     </style>
 </head>
@@ -246,4 +256,3 @@
     <script src="main.js"></script>
 </body>
 </html>
-
