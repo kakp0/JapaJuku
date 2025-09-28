@@ -44,7 +44,7 @@
         sentenceTranslationIncorrectAttempt: 5,   // NEW: Half XP for incorrect sentence translation
 
         // Written Passage (XP awarded for every 5 characters written)
-        passageCharactersWritten: 5,
+        passageCharactersWritten: 1,
 
         quizCorrect: 12.5, // NEW: Half XP for incorrect normal reading
         quizWrong: 5,    // NEW: Half XP for incorrect hard reading
@@ -879,4 +879,5 @@
         window.playerDataManager = playerDataManager;
     });
 })();
+
 
