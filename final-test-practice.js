@@ -2,17 +2,32 @@ document.addEventListener('DOMContentLoaded', () => {
     // Check for playerDataManager from main.js
     const playerData = window.playerDataManager;
 
-    // --- Quiz Data based on JAPA202 Final Test Practice PDF (Pages 1-4) ---
+    // --- Helper function for lenient answer checking ---
+    function normalizeAnswer(str) {
+        if (typeof str !== 'string') return '';
+        // For Japanese: remove punctuation (。, 、, ・), full-width spaces, and standard spaces.
+        // For English: convert to lowercase, remove punctuation, and spaces.
+        // This makes comparisons insensitive to minor formatting differences.
+        return str
+            .trim()
+            .toLowerCase() // Handles English case-insensitivity
+            .replace(/[.,!?。、・']/g, '') // Remove common punctuation
+            .replace(/　/g, '') // Remove full-width Japanese spaces
+            .replace(/\s+/g, ''); // Remove all other whitespace
+    }
+
+
+    // --- Quiz Data corrected based on JAPA202 Final Test Practice Answers PDF ---
     const quizData = {
-        totalQuestions: 55, // UPDATED: 8 + 3 + 11 + 27 + 6 = 55
+        totalQuestions: 55, // 8 + 3 + 12 + 27 + 5 = 55 (re-adjusted particle/grammar counts)
         pages: [
             // Page 1: Causative and Causative-passive (A)
             {
                 title: 'Causative & Causative-passive (A)',
                 section: 'Causative & Causative-passive',
                 questions: [
-                    { id: 'q1a-causative', type: 'text', answer: '部長は私にお茶を入れさせました。' },
-                    { id: 'q1b-causative-passive', type: 'text', answer: '私は部長にお茶を入れさせられました。' }
+                    { id: 'q1a-causative', type: 'text', answer: '私にお茶を入れさせました' },
+                    { id: 'q1b-causative-passive', type: 'text', answer: '部長にお茶を入れさせられました' }
                 ]
             },
             // Page 2: Causative and Causative-passive (B)
@@ -20,8 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: 'Causative & Causative-passive (B)',
                 section: 'Causative & Causative-passive',
                 questions: [
-                    { id: 'q2a-causative', type: 'text', answer: '先生は学生にむずかしい漢字を習わせました。' },
-                    { id: 'q2b-causative-passive', type: 'text', answer: '学生は先生にむずかしい漢字を習わせられました。' }
+                    { id: 'q2a-causative', type: 'text', answer: '学生にむずかしい漢字を習わせました' },
+                    { id: 'q2b-causative-passive', type: 'text', answer: '先生にむずかしい漢字を習わされました' } // Corrected conjugation
                 ]
             },
             // Page 3: Causative and Causative-passive (C)
@@ -29,62 +44,62 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: 'Causative & Causative-passive (C)',
                 section: 'Causative & Causative-passive',
                 questions: [
-                    { id: 'q3a-causative', type: 'text', answer: 'せんぱいはこうはいにおべんとうを買いに行かせました。' },
-                    { id: 'q3b-causative-passive', type: 'text', answer: 'こうはいはせんぱいにおべんとうを買いに行かせられました。' }
+                    { id: 'q3a-causative', type: 'text', answer: 'こうはいにおべんとうを買いに行かせました' },
+                    { id: 'q3b-causative-passive', type: 'text', answer: 'せんぱいにおべんとうを買いに行かされました' } // Corrected conjugation
                 ]
             },
-            // Page 4: Causative and Causative-passive (D) - ADDED
+            // Page 4: Causative and Causative-passive (D)
             {
                 title: 'Causative & Causative-passive (D)',
                 section: 'Causative & Causative-passive',
                 questions: [
-                    { id: 'q4a-causative-passive', type: 'text', answer: 'けんたさんはゆいさんにおごらせられました。' },
-                    { id: 'q4b-causative', type: 'text', answer: 'ゆいさんはけんたさんにおごらせました。' }
+                    { id: 'q4a-causative-passive', type: 'text', answer: 'ゆいさんにおごらせました' }, // Corrected and swapped
+                    { id: 'q4b-causative', type: 'text', answer: 'けんたさんにおごらされました' } // Corrected and swapped
                 ]
             },
-            // Page 5: Translation (Renumbered)
+            // Page 5: Translation
             {
                 title: 'Translation',
                 section: 'Translation',
                 questions: [
-                    { id: 'q1-translation', type: 'text', answer: 'My parents let me go out to play late at night and do a part-time job on weekends.' },
-                    { id: 'q2-translation', type: 'text', answer: 'Even though there is a university exam next week, Takeshi has not started studying yet.' },
-                    { id: 'q3-translation', type: 'text', answer: 'If you live alone, you can have more free time, but you cannot save money.' }
+                    { id: 'q1-translation', type: 'text', answer: 'My parents allowed me to go out and have fun on weekends until late and to do a part-time job.' }, // Matched PDF
+                    { id: 'q2-translation', type: 'text', answer: "Even though there is a university exam next week, Takeshi still hasn't started studying." }, // Matched PDF
+                    { id: 'q3-translation', type: 'text', answer: "If I live alone, I'll have more free time, but I won't be able to save money." } // Matched PDF
                 ]
             },
-            // Page 6: Particle Quiz (Renumbered)
+            // Page 6: Particle Quiz
             {
                 title: 'Particles',
                 section: 'Particles',
                 type: 'particle',
-                answers: ['に', 'を', 'に', 'が', 'が', 'N', 'に', 'で', 'に', 'N', 'を']
+                answers: ['に', 'を', 'に', 'が', 'が', 'N', 'に', 'で', 'に', 'N', ['が', 'を']] // Corrected based on PDF
             },
-            // Page 7: Verb Forms (Renumbered & UPDATED)
+            // Page 7: Verb Forms (in Hiragana as per instructions)
             {
                 title: 'Verb Forms',
                 section: 'Verb Forms',
                 type: 'table',
                 answers: [
-                    '考えさせる', '考えさせられる', '考えれば',
-                    '書かせる', '書かせられる', '書けば',
-                    '飲ませる', '飲ませられる', '飲めば',
-                    '運ばせる', '運ばせられる', '運べば',
-                    '手伝わせる', '手伝わせられる', '手伝えば', // ADDED
-                    'とまらせる', 'とまらせられる', 'とまれば', // ADDED
-                    'おさせる', 'おさせられる', 'おせば',   // ADDED
+                    'かんがえさせる', 'かんがえさせられる', 'かんがえれば',
+                    'かかせる', 'かかされる', 'かけば',
+                    'のませる', 'のまされる', 'のめば',
+                    'はこばせる', 'はこばされる', 'はこべば',
+                    'てつだわせる', 'てつだわされる', 'てつだえば',
+                    'とまらせる', 'とまらされる', 'とまれば',
+                    'おさせる', 'おさせられる', 'おせば',
                     'させる', 'させられる', 'すれば',
                     'こさせる', 'こさせられる', 'くれば'
                 ]
             },
-            // Page 8: Grammar and Conjugation (Renumbered)
+            // Page 8: Grammar and Conjugation
             {
                 title: 'Grammar & Conjugation',
                 section: 'Grammar & Conjugation',
                 questions: [
-                    { id: 'q1-grammar', type: 'text', answer: '前に' },
+                    { id: 'q1-grammar', type: 'text', answer: 'なるまで' },      // Corrected
                     { id: 'q2-grammar', type: 'text', answer: '悪くても' },
                     { id: 'q3-grammar', type: 'text', answer: 'したのに' },
-                    { id: 'q4-grammar', type: 'text', answer: '間' },
+                    { id: 'q4-grammar', type: 'text', answer: '来ている間' },  // Corrected
                     { id: 'q5-grammar', type: 'text', answer: 'しなければ' },
                     { id: 'q6-grammar', type: 'text', answer: 'してから' }
                 ]
@@ -117,21 +132,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Update Progress Bar
         const progressPercentage = ((currentPage - 1) / (totalPages - 1)) * 100;
-        progressBar.style.setProperty('--progress-width', `${progressPercentage}%`);
         progressBar.style.width = `${progressPercentage}%`;
         progressText.textContent = `Page ${currentPage} / ${totalPages}`;
 
         // Update Buttons
         backBtn.disabled = currentPage === 1;
         
-        // Logic for next/finish buttons
         const isLastContentPage = currentPage === totalPages - 1;
         nextBtn.style.display = isLastContentPage ? 'none' : 'flex';
         finishBtn.style.display = isLastContentPage ? 'flex' : 'none';
 
-
         if (currentPage === totalPages) {
-            // If on results page, hide main nav
             document.getElementById('navigation-controls').style.display = 'none';
             progressText.textContent = `Test Complete!`;
         } else {
@@ -141,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function saveAnswers() {
         const pageIndex = currentPage - 1;
-        if (pageIndex >= quizData.pages.length) return; // Don't save on results page
+        if (pageIndex >= quizData.pages.length) return;
     
         const currentPageData = quizData.pages[pageIndex];
         if (!currentPageData) return;
@@ -150,16 +161,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (currentPageData.type === 'particle') {
             const inputs = pages[pageIndex].querySelectorAll('.particle-input');
-            inputs.forEach(input => userAnswers[currentPage].push(input.value.trim().toUpperCase())); // Use uppercase for 'N' consistency
+            inputs.forEach(input => userAnswers[currentPage].push(input.value));
         } else if (currentPageData.type === 'table') {
             const inputs = pages[pageIndex].querySelectorAll('.verb-input');
-            inputs.forEach(input => userAnswers[currentPage].push(input.value.trim()));
+            inputs.forEach(input => userAnswers[currentPage].push(input.value));
         } else {
             currentPageData.questions.forEach(q => {
                 if (q.type === 'text') {
                     const input = document.getElementById(q.id);
                     if (input) {
-                        userAnswers[currentPage].push({ id: q.id, value: input.value.trim() });
+                        userAnswers[currentPage].push({ id: q.id, value: input.value });
                     }
                 }
             });
@@ -188,19 +199,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 const correctAnswers = pageData.answers;
                 aggregatedScores[sectionIdentifier].total += correctAnswers.length;
 
-                let answerIndex = 0;
-                pages[index].querySelectorAll(inputSelector).forEach(input => {
-                    const userAnswer = input.value.trim();
-                    const correctAnswer = (pageData.type === 'particle') ? correctAnswers[answerIndex]?.toUpperCase() : correctAnswers[answerIndex];
+                const userPageAnswers = answers;
+                userPageAnswers.forEach((userAnswerRaw, answerIndex) => {
+                    const correctAnswer = correctAnswers[answerIndex];
                     
-                    if (correctAnswers[answerIndex] !== undefined) {
-                        if (userAnswer === correctAnswer) {
+                    if (correctAnswer !== undefined) {
+                        const normalizedUserAnswer = normalizeAnswer(userAnswerRaw);
+                        let isCorrect = false;
+
+                        if (Array.isArray(correctAnswer)) {
+                            // If correct answer is an array of possibilities (e.g., ['が', 'を'])
+                            const normalizedOptions = correctAnswer.map(opt => normalizeAnswer(opt));
+                            if (normalizedOptions.includes(normalizedUserAnswer)) {
+                                isCorrect = true;
+                            }
+                        } else {
+                            // If correct answer is a single string
+                            const normalizedCorrectAnswer = normalizeAnswer(correctAnswer);
+                            if (normalizedUserAnswer === normalizedCorrectAnswer) {
+                                isCorrect = true;
+                            }
+                        }
+                        
+                        if (isCorrect) {
                             sectionCorrect++;
-                        } else if (userAnswer !== '') {
+                        } else if (userAnswerRaw.trim() !== '') {
                             totalWrongAndAttempted++;
                         }
                     }
-                    answerIndex++;
                 });
 
             } else {
@@ -209,9 +235,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     const userAnswerObj = answers.find(a => a.id === q.id);
                     const userAnswerValue = userAnswerObj ? userAnswerObj.value : '';
 
-                    if (userAnswerValue === q.answer) {
+                    const normalizedUserAnswer = normalizeAnswer(userAnswerValue);
+                    const normalizedCorrectAnswer = normalizeAnswer(q.answer);
+
+                    if (normalizedCorrectAnswer.length > 0 && normalizedUserAnswer === normalizedCorrectAnswer) {
                         sectionCorrect++;
-                    } else if (userAnswerValue !== '') {
+                    } else if (userAnswerValue.trim() !== '') {
                         totalWrongAndAttempted++;
                     }
                 });
@@ -226,12 +255,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function displayResults({ totalCorrect, totalWrongAndAttempted, sectionScores }) {
-        // Update total score
         const percentage = quizData.totalQuestions > 0 ? Math.round((totalCorrect / quizData.totalQuestions) * 100) : 0;
         document.getElementById('total-score-display').textContent = `${percentage}%`;
         document.getElementById('total-score-details').textContent = `(${totalCorrect} / ${quizData.totalQuestions} Correct)`;
 
-        // Display detailed scores
         const detailsContainer = document.getElementById('detailed-scores');
         detailsContainer.innerHTML = '';
         sectionScores.forEach(sec => {
@@ -244,7 +271,6 @@ document.addEventListener('DOMContentLoaded', () => {
             detailsContainer.appendChild(item);
         });
 
-        // Award XP
         if (playerData) {
             for (let i = 0; i < totalCorrect; i++) {
                 playerData.rewardXp('quizCorrect');
@@ -276,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
         saveAnswers();
         const results = calculateResults();
         displayResults(results);
-        currentPage = totalPages; // Go to results page
+        currentPage = totalPages;
         updateUI();
     });
 
