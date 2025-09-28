@@ -45,6 +45,9 @@
 
         // Written Passage (XP awarded for every 5 characters written)
         passageCharactersWritten: 5,
+
+        quizCorrect: 12.5, // NEW: Half XP for incorrect normal reading
+        quizWrong: 5,    // NEW: Half XP for incorrect hard reading
     };
 
 

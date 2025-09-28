@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JapaJuku - Final Test Practice</title>
+    <!-- Anti-flicker theme script -->
+    <script>
+        (function() {
+            try {
+                var theme = localStorage.getItem('japaneseLearnerTheme');
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark-mode');
+                }
+            } catch (e) {}
+        })();
+    </script>
+    <link rel="stylesheet" href="style.css">
+    <!-- Link to the module-specific stylesheet -->
+    <link rel="stylesheet" href="final-test-practice.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+    <div class="page-transition"></div>
+
+    <!-- Profile card remains for user context -->
+    <div id="profile-card">
+        <div class="profile-header">
+            <div class="pfp-wrapper">
+                <div id="profile-picture" title="Customize your profile picture"></div>
+                <div id="pfp-color-picker" class="hidden">
+                    <div class="color-input-group">
+                        <label for="pfp-bg-color">Background</label>
+                        <input type="color" id="pfp-bg-color" value="#007bff">
+                    </div>
+                    <div class="color-input-group">
+                        <label for="pfp-text-color">Letter</label>
+                        <input type="color" id="pfp-text-color" value="#ffffff">
+                    </div>
+                </div>
+            </div>
+            <div class="profile-info">
+                <div class="player-name-wrapper">
+                    <h3 id="player-name" contenteditable="true">Learner</h3>
+                    <i class="ph ph-pencil-simple"></i>
+                </div>
+                <p id="player-title">Newbie</p>
+            </div>
+        </div>
+        <div class="level-system">
+            <div class="level-display">
+                <span>Level <span id="level-number">1</span></span>
+                <span id="xp-counter">0 / 100 XP</span>
+            </div>
+            <div class="xp-bar-container">
+                <div id="xp-bar"></div>
+            </div>
+        </div>
+        <div id="level-up-animation-container">
+            <div class="level-up-wipe"></div>
+            <div class="level-up-text">
+                <span>L</span><span>e</span><span>v</span><span>e</span><span>l</span>
+                <span class="level-up-space">&nbsp;</span>
+                <span>U</span><span>p</span><span>!</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main application container -->
+    <div id="app-container">
+         <div class="main-panel">
+            <div class="app-header">
+                <a href="index.html" class="back-link"><i class="ph-bold ph-arrow-left"></i> Back to Hub</a>
+                <div class="theme-switcher-wrapper">
+                   <i class="ph-bold ph-moon"></i>
+                   <label class="theme-switcher">
+                       <input type="checkbox" id="theme-toggle">
+                       <span class="slider"></span>
+                   </label>
+                   <i class="ph-bold ph-sun"></i>
+               </div>
+           </div>
+           
+           <h1>Final Test Practice</h1>
+           <p class="subtitle">A digitised version of the practice PDF.</p>
+   
+           <div id="quiz-container">
+                <!-- Progress Bar -->
+                <div id="progress-container">
+                    <div id="progress-bar"></div>
+                    <div id="progress-text">Page 1 / 8</div>
+                </div>
+
+                <!-- Page 1: Causative & Causative-passive (A) -->
+                <div class="quiz-page active-page" data-page="1">
+                    <h2 class="page-title">Section 1: Causative & Causative-passive (A)</h2>
+                    <p class="page-instructions">Rewrite the sentences using the specified form.</p>
+                    <div class="question-block">
+                        <label for="q1a-causative">a. From:「私は部長のお茶を入れました。」<br>→ 部長は</label>
+                        <input type="text" id="q1a-causative" class="answer-input" lang="ja" autocomplete="off">
+                    </div>
+                     <div class="question-block">
+                        <label for="q1b-causative-passive">→ 私は</label>
+                        <input type="text" id="q1b-causative-passive" class="answer-input" lang="ja" autocomplete="off">
+                    </div>
+                </div>
+
+                <!-- Page 2: Causative & Causative-passive (B) -->
+                <div class="quiz-page" data-page="2">
+                    <h2 class="page-title">Section 1: Causative & Causative-passive (B)</h2>
+                    <p class="page-instructions">Rewrite the sentences using the specified form.</p>
+                     <div class="question-block">
+                        <label for="q2a-causative">b. From:「学生はむずかしい漢字を習いました。」<br>→ 先生は</label>
+                        <input type="text" id="q2a-causative" class="answer-input" lang="ja" autocomplete="off">
+                    </div>
+                     <div class="question-block">
+                        <label for="q2b-causative-passive">→ 学生は</label>
+                        <input type="text" id="q2b-causative-passive" class="answer-input" lang="ja" autocomplete="off">
+                    </div>
+                </div>
+
+                <!-- Page 3: Causative & Causative-passive (C) -->
+                <div class="quiz-page" data-page="3">
+                    <h2 class="page-title">Section 1: Causative & Causative-passive (C)</h2>
+                    <p class="page-instructions">Rewrite the sentences using the specified form.</p>
+                     <div class="question-block">
+                        <label for="q3a-causative">c. From:「こうはいはせんぱいのおべんとうを買いに行きました。」<br>→ せんぱいは</label>
+                        <input type="text" id="q3a-causative" class="answer-input" lang="ja" autocomplete="off">
+                    </div>
+                     <div class="question-block">
+                        <label for="q3b-causative-passive">→ こうはいは</label>
+                        <input type="text" id="q3b-causative-passive" class="answer-input" lang="ja" autocomplete="off">
+                    </div>
+                </div>
+
+                <!-- Page 4: Translation -->
+                <div class="quiz-page" data-page="4">
+                    <h2 class="page-title">Section 2: Translation</h2>
+                    <p class="page-instructions">Translate the following Japanese sentences into English.</p>
+                    <div class="question-block">
+                        <label for="q1-translation">a. 両親は、週末、夜遅くまであそびに行ったり、バイトをしたりさせてくれました。</label>
+                        <input type="text" id="q1-translation" class="answer-input" autocomplete="off">
+                    </div>
+                    <div class="question-block">
+                        <label for="q2-translation">b. 来週は大学の試験があるのに、たけしさんはまだ勉強し始めていません。</label>
+                        <input type="text" id="q2-translation" class="answer-input" autocomplete="off">
+                    </div>
+                    <div class="question-block">
+                        <label for="q3-translation">c. 一人ぐらしをすれば、もっと自由な時間ができるが、お金をためられない。</label>
+                        <input type="text" id="q3-translation" class="answer-input" autocomplete="off">
+                    </div>
+                </div>
+
+                <!-- Page 5: Particle Quiz -->
+                <div class="quiz-page" data-page="5">
+                    <h2 class="page-title">Section 3: Particle Quiz</h2>
+                    <p class="page-instructions">Fill in the blanks with が, に, を, で, or N (for nothing).</p>
+                    <div class="particle-question">
+                        <span>a. 友だち</span><input type="text" class="particle-input" maxlength="1"><span>うそ</span><input type="text" class="particle-input" maxlength="1"><span>ついてしまった。</span>
+                    </div>
+                     <div class="particle-question">
+                        <span>b. 急</span><input type="text" class="particle-input" maxlength="1"><span>雨</span><input type="text" class="particle-input" maxlength="1"><span>ふってきた。</span>
+                    </div>
+                     <div class="particle-question">
+                        <span>c. 用事</span><input type="text" class="particle-input" maxlength="1"><span>できたから早く</span><input type="text" class="particle-input" maxlength="1"><span>帰らせてください。</span>
+                    </div>
+                     <div class="particle-question">
+                        <span>d. 代わり</span><input type="text" class="particle-input" maxlength="1"><span>運転しましょうか。</span>
+                    </div>
+                    <div class="particle-question">
+                        <span>e. ごめん、今晩は残業</span><input type="text" class="particle-input" maxlength="1"><span>飲み会</span><input type="text" class="particle-input" maxlength="1"><span>行けない。</span>
+                    </div>
+                     <div class="particle-question">
+                        <span>f. うまく</span><input type="text" class="particle-input" maxlength="1"><span>理由</span><input type="text" class="particle-input" maxlength="1"><span>説明できませんでした。</span>
+                    </div>
+                </div>
+
+                <!-- Page 6: Verb Forms -->
+                <div class="quiz-page" data-page="6">
+                    <h2 class="page-title">Section 4: Verb Forms</h2>
+                    <p class="page-instructions">Fill in the chart using hiragana (short form).</p>
+                    <div class="verb-table-container">
+                        <table class="verb-table">
+                            <thead>
+                                <tr>
+                                    <th>Dictionary form</th>
+                                    <th>Causative form</th>
+                                    <th>Causative-passive form</th>
+                                    <th>Conditional form</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>a. 考える</td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td></tr>
+                                <tr><td>b. 書く</td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td></tr>
+                                <tr><td>c. 飲む</td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td></tr>
+                                <tr><td>d. 運ぶ</td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td></tr>
+                                <tr><td>h. する</td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td></tr>
+                                <tr><td>i. 来る</td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Page 7: Grammar and Conjugation -->
+                <div class="quiz-page" data-page="7">
+                    <h2 class="page-title">Section 5: Grammar & Conjugation</h2>
+                    <p class="page-instructions">Choose from: <br><b>ても・のに・ば・前に・後で・間・(て)から・ながら・まで</b><br> Fill in the blank, conjugating the underlined verb if needed.</p>
+                     <div class="question-block">
+                        <label for="q1-grammar">1. 日本では二十歳に<u>なる</u> [→ <input type="text" id="q1-grammar" class="grammar-input" lang="ja"> ] お酒は飲めません。</label>
+                    </div>
+                    <div class="question-block">
+                        <label for="q2-grammar">2. 会社のめんせつの結果が<u>悪い</u> [→ <input type="text" id="q2-grammar" class="grammar-input" lang="ja"> ]、がっかりしないでください。</label>
+                    </div>
+                    <div class="question-block">
+                        <label for="q3-grammar">3. 有名な大学を<u>卒業する</u> [→ <input type="text" id="q3-grammar" class="grammar-input" lang="ja"> ]、いい会社に就職できなかった。</label>
+                    </div>
+                     <div class="question-block">
+                        <label for="q4-grammar">4. 台風が<u>来ている</u> [→ <input type="text" id="q4-grammar" class="grammar-input" lang="ja"> ]、授業は全部休講になります。</label>
+                    </div>
+                     <div class="question-block">
+                        <label for="q5-grammar">5. 無駄遣いを<u>しない</u> [→ <input type="text" id="q5-grammar" class="grammar-input" lang="ja"> ]、お金をためられます。</label>
+                    </div>
+                     <div class="question-block">
+                        <label for="q6-grammar">6. いつも、予習<u>する</u> [→ <input type="text" id="q6-grammar" class="grammar-input" lang="ja"> ] 授業に出ることにしています。</label>
+                    </div>
+                </div>
+
+                <!-- Page 8: Results Screen -->
+                <div class="quiz-page" data-page="8">
+                    <h2 class="page-title">Test Complete!</h2>
+                    <p class="page-instructions">Here are your results.</p>
+                    <div id="results-summary">
+                        <div class="score-card">
+                            <p class="total-score-label">Total Score</p>
+                            <p id="total-score-display">0%</p>
+                            <p id="total-score-details">(0 / 44 Correct)</p>
+                        </div>
+                        <div id="detailed-scores">
+                            <!-- Detailed scores will be injected here by JS -->
+                        </div>
+                        <button id="restart-btn">Try Again</button>
+                    </div>
+                </div>
+
+                <!-- Navigation Controls -->
+                <div id="navigation-controls">
+                    <button id="back-btn" class="nav-btn" disabled><i class="ph-bold ph-arrow-left"></i> Back</button>
+                    <button id="next-btn" class="nav-btn">Next <i class="ph-bold ph-arrow-right"></i></button>
+                    <button id="finish-btn" class="nav-btn" style="display: none;">Finish Test</button>
+                </div>
+           </div>
+        </div>
+    </div>
+
+    <div id="notification-container"></div>
+    
+    <script src="main.js"></script>
+    <script src="final-test-practice.js"></script>
+</body>
+</html>
+
