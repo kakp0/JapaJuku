@@ -88,7 +88,7 @@
                 <!-- Progress Bar -->
                 <div id="progress-container">
                     <div id="progress-bar"></div>
-                    <div id="progress-text">Page 1 / 8</div>
+                    <div id="progress-text">Page 1 / 9</div>
                 </div>
 
                 <!-- Page 1: Causative & Causative-passive (A) -->
@@ -133,8 +133,22 @@
                     </div>
                 </div>
 
-                <!-- Page 4: Translation -->
+                <!-- Page 4: Causative & Causative-passive (D) - ADDED -->
                 <div class="quiz-page" data-page="4">
+                    <h2 class="page-title">Section 1: Causative & Causative-passive (D)</h2>
+                    <p class="page-instructions">Rewrite the sentences using the specified form.</p>
+                     <div class="question-block">
+                        <label for="q4a-causative-passive">c. From:「ゆいさんはけんたさんにおごりました。」<br>→ けんたさんは</label>
+                        <input type="text" id="q4a-causative-passive" class="answer-input" lang="ja" autocomplete="off">
+                    </div>
+                     <div class="question-block">
+                        <label for="q4b-causative">→ ゆいさんは</label>
+                        <input type="text" id="q4b-causative" class="answer-input" lang="ja" autocomplete="off">
+                    </div>
+                </div>
+
+                <!-- Page 5: Translation (Renumbered) -->
+                <div class="quiz-page" data-page="5">
                     <h2 class="page-title">Section 2: Translation</h2>
                     <p class="page-instructions">Translate the following Japanese sentences into English.</p>
                     <div class="question-block">
@@ -151,8 +165,8 @@
                     </div>
                 </div>
 
-                <!-- Page 5: Particle Quiz -->
-                <div class="quiz-page" data-page="5">
+                <!-- Page 6: Particle Quiz (Renumbered) -->
+                <div class="quiz-page" data-page="6">
                     <h2 class="page-title">Section 3: Particle Quiz</h2>
                     <p class="page-instructions">Fill in the blanks with が, に, を, で, or N (for nothing).</p>
                     <div class="particle-question">
@@ -175,8 +189,8 @@
                     </div>
                 </div>
 
-                <!-- Page 6: Verb Forms -->
-                <div class="quiz-page" data-page="6">
+                <!-- Page 7: Verb Forms (Renumbered) -->
+                <div class="quiz-page" data-page="7">
                     <h2 class="page-title">Section 4: Verb Forms</h2>
                     <p class="page-instructions">Fill in the chart using hiragana (short form).</p>
                     <div class="verb-table-container">
@@ -194,6 +208,10 @@
                                 <tr><td>b. 書く</td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td></tr>
                                 <tr><td>c. 飲む</td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td></tr>
                                 <tr><td>d. 運ぶ</td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td></tr>
+                                <!-- ADDED VERBS -->
+                                <tr><td>e. 手伝う</td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td></tr>
+                                <tr><td>f. とまる</td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td></tr>
+                                <tr><td>g. おす</td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td></tr>
                                 <tr><td>h. する</td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td></tr>
                                 <tr><td>i. 来る</td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td><td><input type="text" class="verb-input" lang="ja"></td></tr>
                             </tbody>
@@ -201,8 +219,8 @@
                     </div>
                 </div>
 
-                <!-- Page 7: Grammar and Conjugation -->
-                <div class="quiz-page" data-page="7">
+                <!-- Page 8: Grammar and Conjugation (Renumbered) -->
+                <div class="quiz-page" data-page="8">
                     <h2 class="page-title">Section 5: Grammar & Conjugation</h2>
                     <p class="page-instructions">Choose from: <br><b>ても・のに・ば・前に・後で・間・(て)から・ながら・まで</b><br> Fill in the blank, conjugating the underlined verb if needed.</p>
                      <div class="question-block">
@@ -225,15 +243,15 @@
                     </div>
                 </div>
 
-                <!-- Page 8: Results Screen -->
-                <div class="quiz-page" data-page="8">
+                <!-- Page 9: Results Screen (Renumbered) -->
+                <div class="quiz-page" data-page="9">
                     <h2 class="page-title">Test Complete!</h2>
                     <p class="page-instructions">Here are your results.</p>
                     <div id="results-summary">
                         <div class="score-card">
                             <p class="total-score-label">Total Score</p>
                             <p id="total-score-display">0%</p>
-                            <p id="total-score-details">(0 / 44 Correct)</p>
+                            <p id="total-score-details">(0 / 55 Correct)</p>
                         </div>
                         <div id="detailed-scores">
                             <!-- Detailed scores will be injected here by JS -->
@@ -258,4 +276,3 @@
     <script src="final-test-practice.js"></script>
 </body>
 </html>
-

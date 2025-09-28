@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Quiz Data based on JAPA202 Final Test Practice PDF (Pages 1-4) ---
     const quizData = {
-        totalQuestions: 44, // 6 + 3 + 11 + 18 + 6 = 44
+        totalQuestions: 55, // UPDATED: 8 + 3 + 11 + 27 + 6 = 55
         pages: [
             // Page 1: Causative and Causative-passive (A)
             {
@@ -33,7 +33,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     { id: 'q3b-causative-passive', type: 'text', answer: 'こうはいはせんぱいにおべんとうを買いに行かせられました。' }
                 ]
             },
-            // Page 4: Translation (from PDF p2)
+            // Page 4: Causative and Causative-passive (D) - ADDED
+            {
+                title: 'Causative & Causative-passive (D)',
+                section: 'Causative & Causative-passive',
+                questions: [
+                    { id: 'q4a-causative-passive', type: 'text', answer: 'けんたさんはゆいさんにおごらせられました。' },
+                    { id: 'q4b-causative', type: 'text', answer: 'ゆいさんはけんたさんにおごらせました。' }
+                ]
+            },
+            // Page 5: Translation (Renumbered)
             {
                 title: 'Translation',
                 section: 'Translation',
@@ -43,14 +52,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     { id: 'q3-translation', type: 'text', answer: 'If you live alone, you can have more free time, but you cannot save money.' }
                 ]
             },
-            // Page 5: Particle Quiz (from PDF p2, 3, 4)
+            // Page 6: Particle Quiz (Renumbered)
             {
                 title: 'Particles',
                 section: 'Particles',
                 type: 'particle',
                 answers: ['に', 'を', 'に', 'が', 'が', 'N', 'に', 'で', 'に', 'N', 'を']
             },
-            // Page 6: Verb Forms (from PDF p3)
+            // Page 7: Verb Forms (Renumbered & UPDATED)
             {
                 title: 'Verb Forms',
                 section: 'Verb Forms',
@@ -60,11 +69,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     '書かせる', '書かせられる', '書けば',
                     '飲ませる', '飲ませられる', '飲めば',
                     '運ばせる', '運ばせられる', '運べば',
+                    '手伝わせる', '手伝わせられる', '手伝えば', // ADDED
+                    'とまらせる', 'とまらせられる', 'とまれば', // ADDED
+                    'おさせる', 'おさせられる', 'おせば',   // ADDED
                     'させる', 'させられる', 'すれば',
                     'こさせる', 'こさせられる', 'くれば'
                 ]
             },
-            // Page 7: Grammar and Conjugation (from PDF p4)
+            // Page 8: Grammar and Conjugation (Renumbered)
             {
                 title: 'Grammar & Conjugation',
                 section: 'Grammar & Conjugation',
@@ -128,16 +140,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function saveAnswers() {
-        const currentPageData = quizData.pages[currentPage - 1];
+        const pageIndex = currentPage - 1;
+        if (pageIndex >= quizData.pages.length) return; // Don't save on results page
+    
+        const currentPageData = quizData.pages[pageIndex];
         if (!currentPageData) return;
 
         userAnswers[currentPage] = [];
 
         if (currentPageData.type === 'particle') {
-            const inputs = pages[currentPage - 1].querySelectorAll('.particle-input');
+            const inputs = pages[pageIndex].querySelectorAll('.particle-input');
             inputs.forEach(input => userAnswers[currentPage].push(input.value.trim().toUpperCase())); // Use uppercase for 'N' consistency
         } else if (currentPageData.type === 'table') {
-            const inputs = pages[currentPage - 1].querySelectorAll('.verb-input');
+            const inputs = pages[pageIndex].querySelectorAll('.verb-input');
             inputs.forEach(input => userAnswers[currentPage].push(input.value.trim()));
         } else {
             currentPageData.questions.forEach(q => {
@@ -153,7 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function calculateResults() {
         let totalCorrect = 0;
-        // NEW: Add a counter for answers that were attempted but wrong.
         let totalWrongAndAttempted = 0;
         const aggregatedScores = {};
 
@@ -182,8 +196,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (correctAnswers[answerIndex] !== undefined) {
                         if (userAnswer === correctAnswer) {
                             sectionCorrect++;
-                        } else if (userAnswer !== '') { // It's not correct, but was it filled in?
-                            totalWrongAndAttempted++; // Yes, so count it for 'wrong' XP.
+                        } else if (userAnswer !== '') {
+                            totalWrongAndAttempted++;
                         }
                     }
                     answerIndex++;
@@ -197,8 +211,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     if (userAnswerValue === q.answer) {
                         sectionCorrect++;
-                    } else if (userAnswerValue !== '') { // It's not correct, but was it filled in?
-                        totalWrongAndAttempted++; // Yes, so count it for 'wrong' XP.
+                    } else if (userAnswerValue !== '') {
+                        totalWrongAndAttempted++;
                     }
                 });
             }
@@ -208,7 +222,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const sectionScores = Object.values(aggregatedScores);
-        // UPDATED: Return the new count alongside the existing data.
         return { totalCorrect, totalWrongAndAttempted, sectionScores };
     }
 
@@ -233,11 +246,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Award XP
         if (playerData) {
-            // Award XP for each correct answer (no change here)
             for (let i = 0; i < totalCorrect; i++) {
                 playerData.rewardXp('quizCorrect');
             }
-            // UPDATED: Award XP ONLY for answers that were attempted and wrong.
             for (let i = 0; i < totalWrongAndAttempted; i++) {
                 playerData.rewardXp('quizWrong');
             }
@@ -270,7 +281,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     restartBtn.addEventListener('click', () => {
-        // Clear all inputs and state
         currentPage = 1;
         userAnswers = {};
         document.querySelectorAll('input[type="text"], .particle-input, .verb-input, .grammar-input').forEach(i => i.value = '');
@@ -281,4 +291,3 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Initial Setup ---
     updateUI();
 });
-
