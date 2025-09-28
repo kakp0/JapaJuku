@@ -90,31 +90,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- State ---
     let currentSentence = null;
     let currentSentenceType = null;
-
-    // --- Functions ---
+    
+    // --- Layout and Utility Functions (Unchanged) ---
     const handleResponsiveLayout = () => {
         const breakpoint = 1400;
-        const mobileBreakpoint = 1100;
-
-        if (!profileCard || !mainPanel || !body) {
-            console.error("Required elements for layout handling are missing.");
-            return;
-        }
-
-        // Middle Zone (Integrated View) & Mobile Zone (Stacked View)
+        if (!profileCard || !mainPanel || !body) return;
         if (window.innerWidth <= breakpoint) {
-            // If card is not already in the main panel, move it there.
-            if (profileCard.parentElement !== mainPanel) {
-                mainPanel.appendChild(profileCard);
-            }
-        } 
-        // Desktop Zone
-        else {
-            // If card is not already a direct child of the body, move it back.
-            if (profileCard.parentElement !== body) {
-                 // Place it before the app-container to maintain a consistent DOM structure for CSS.
-                 body.insertBefore(profileCard, document.getElementById('app-container'));
-            }
+            if (profileCard.parentElement !== mainPanel) mainPanel.appendChild(profileCard);
+        } else {
+            if (profileCard.parentElement !== body) body.insertBefore(profileCard, document.getElementById('app-container'));
         }
     };
 
@@ -139,22 +123,84 @@ document.addEventListener('DOMContentLoaded', () => {
         sentenceDisplay.innerHTML = japaneseText;
     }
 
+    // --- NEW: Smart Validation Functions ---
+
+    /**
+     * Calculates the Levenshtein distance between two strings.
+     * This measures the number of edits (insertions, deletions, substitutions)
+     * needed to change one string into the other.
+     */
+    function calculateLevenshteinDistance(s1, s2) {
+        const costs = [];
+        for (let i = 0; i <= s1.length; i++) {
+            let lastValue = i;
+            for (let j = 0; j <= s2.length; j++) {
+                if (i === 0) {
+                    costs[j] = j;
+                } else {
+                    if (j > 0) {
+                        let newValue = costs[j - 1];
+                        if (s1.charAt(i - 1) !== s2.charAt(j - 1)) {
+                            newValue = Math.min(newValue, lastValue, costs[j]) + 1;
+                        }
+                        costs[j - 1] = lastValue;
+                        lastValue = newValue;
+                    }
+                }
+            }
+            if (i > 0) costs[s2.length] = lastValue;
+        }
+        return costs[s2.length];
+    }
+
+    /**
+     * Calculates a similarity score between 0.0 and 1.0 based on Levenshtein distance.
+     * 1.0 means the strings are identical.
+     */
+    function calculateSimilarity(s1, s2) {
+        const longer = s1.length > s2.length ? s1 : s2;
+        const shorter = s1.length > s2.length ? s2 : s1;
+        if (longer.length === 0) return 1.0;
+        const distance = calculateLevenshteinDistance(longer, shorter);
+        return (longer.length - distance) / longer.length;
+    }
+    
+    /**
+     * Normalizes a string by making it lowercase, removing punctuation, and trimming whitespace.
+     */
     function normalizeString(str) {
         if (!str) return '';
-        return str.toLowerCase().replace(/[.,?!']/g, '').trim();
+        return str.toLowerCase().replace(/[.,?!']/g, '').replace(/\s+/g, ' ').trim();
     }
+
+
+    // --- UPDATED: checkAnswer Function ---
 
     function checkAnswer() {
         const userAnswer = answerInput.value;
         if (!userAnswer) return;
 
         const correctAnswerKey = `${currentSentenceType}_en`;
-        const correctAnswers = currentSentence[correctAnswerKey];
-        const possibleAnswers = Array.isArray(correctAnswers) ? correctAnswers : [correctAnswers];
+        const possibleAnswers = currentSentence[correctAnswerKey];
         const normalizedUserAnswer = normalizeString(userAnswer);
-        const isCorrect = possibleAnswers.some(answer => normalizeString(answer) === normalizedUserAnswer);
-        
-        feedbackArea.innerHTML = ''; 
+
+        // Find the best match among the possible correct answers
+        let bestSimilarity = 0;
+        let bestMatchAnswer = '';
+        possibleAnswers.forEach(answer => {
+            const normalizedCorrectAnswer = normalizeString(answer);
+            const similarity = calculateSimilarity(normalizedUserAnswer, normalizedCorrectAnswer);
+            if (similarity > bestSimilarity) {
+                bestSimilarity = similarity;
+                bestMatchAnswer = answer; // Keep the original for display
+            }
+        });
+
+        // Set a threshold for correctness. 0.85 means 85% similar.
+        const SIMILARITY_THRESHOLD = 0.93;
+        const isCorrect = bestSimilarity >= SIMILARITY_THRESHOLD;
+
+        feedbackArea.innerHTML = '';
         const feedbackCard = document.createElement('div');
         feedbackCard.classList.add('feedback-card');
 
@@ -162,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (isCorrect) {
             feedbackCard.classList.add('correct');
-            feedbackCard.textContent = 'Correct!';
+            feedbackCard.textContent = `Correct! (Similarity: ${Math.round(bestSimilarity * 100)}%)`;
             
             if (playerData) {
                 playerData.rewardXp('sentenceTranslationCorrect');
@@ -185,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } else {
             feedbackCard.classList.add('incorrect');
-            feedbackCard.innerHTML = `Not quite. Correct answer: <strong>${possibleAnswers[0]}</strong>`;
+            feedbackCard.innerHTML = `Not quite. Correct answer: <strong>${bestMatchAnswer}</strong>`;
 
             if (playerData) {
                 playerData.rewardXp('sentenceTranslationIncorrectAttempt'); // Reward half XP for the attempt
@@ -195,27 +241,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         feedbackArea.appendChild(feedbackCard);
-
         answerInput.disabled = true;
         checkBtn.style.display = 'none';
         nextBtn.style.display = 'inline-block';
         nextBtn.focus();
     }
 
-    // --- Event Listeners ---
+    // --- Event Listeners (Unchanged) ---
     checkBtn.addEventListener('click', checkAnswer);
     nextBtn.addEventListener('click', loadNewQuestion);
 
     document.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
-            e.preventDefault(); // Prevent default action for Enter key
-
-            // If the "Next" button is visible, click it. This takes priority.
+            e.preventDefault();
             if (nextBtn.style.display !== 'none') {
                 nextBtn.click();
-            } 
-            // Otherwise, if the "Check" button is visible, click it.
-            else if (checkBtn.style.display !== 'none') {
+            } else if (checkBtn.style.display !== 'none') {
                 checkBtn.click();
             }
         }
@@ -231,3 +272,4 @@ document.addEventListener('DOMContentLoaded', () => {
     loadNewQuestion();
     handleResponsiveLayout();
 });
+
