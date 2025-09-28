@@ -162,6 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
             feedbackCard.innerHTML = `Not quite. Correct answer: <strong>${correctAnswer}</strong>`;
 
             if (window.playerDataManager) {
+                window.playerDataManager.rewardXp('conjugationIncorrectAttempt'); // Reward half XP for the attempt
                 window.playerDataManager.increaseStat('conjugationMistakes', 1);
                 window.playerDataManager.setStat('conjugationStreak', 0);
             }
@@ -206,4 +207,3 @@ document.addEventListener('DOMContentLoaded', () => {
     loadNewQuestion();
     handleResponsiveLayout();
 });
-

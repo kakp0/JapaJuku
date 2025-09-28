@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // This script now assumes main.js has loaded and window.playerDataManager is available.
 
     // --- Configuration ---
-    const lessons = [{ name: "Lesson 22", kanji: [ { char: '記', on: 'キ', kun: 'しる.す', en: 'scribe, account' }, { char: '銀', on: 'ギン', kun: 'しろがね', en: 'silver' }, { char: '回', on: 'カイ', kun: 'まわ.る', en: 'times, round' }, { char: '夕', on: 'セキ', kun: 'ゆう', en: 'evening' }, { char: '黒', on: 'コク', kun: 'くろ', en: 'black' }, { char: '用', on: 'ヨウ', kun: 'もち.いる', en: 'use, business' }, { char: '守', on: 'シュ, ス', kun: 'まも.る', en: 'guard, protect' }, { char: '末', on: 'マツ', kun: 'すえ', en: 'end, close' }, { char: '待', on: 'タイ', kun: 'ま.つ', en: 'wait' }, { char: '残', on: 'ザン', kun: 'のこ.る', en: 'remainder, leave behind' }, { char: '番', on: 'バン', kun: 'つが.い', en: 'turn, number in series' }, { char: '駅', on: 'エキ', kun: 'n/a', en: 'station' }, { char: '説', on: 'セツ', kun: 'と.く', en: 'theory, explanation' }, { char: '案', on: 'アン', kun: 'つくえ', en: 'plan, suggestion' }, { char: '内', on: 'ナイ', kun: 'うち', en: 'inside, within' }, { char: '忘', on: 'ボウ', kun: 'わす.れる', en: 'forget' } ] }, { name: "Lesson 23", kanji: [ { char: '調', on: 'チョウ', kun: 'しら.べる', en: 'investigate, tune' }, { char: '化', on: 'カ, ケ', kun: 'ば.ける', en: 'change, take form of' }, { char: '横', on: 'オウ', kun: 'よこ', en: 'sideways, side' }, { char: '比', on: 'ヒ', kun: 'くら.べる', en: 'compare, ratio' }, { char: '感', on: 'カン', kun: 'n/a', en: 'feel, emotion' }, { char: '果', on: 'カ', kun: 'は.たす', en: 'fruit, result' }, { char: '答', on: 'トウ', kun: 'こた.える', en: 'solution, answer' }, { char: '変', on: 'ヘン', kun: 'か.わる', en: 'unusual, change' }, { char: '情', on: 'ジョウ', kun: 'なさ.け', en: 'feeling, passion' }, { char: '悲', on: 'ヒ', kun: 'かな.しい', en: 'grieve, sad' }, { char: '査', on: 'サ', kun: 'n/a', en: 'investigate' }, { char: '違', on: 'イ', kun: 'ちが.う', en: 'differ, violate' }, { char: '相', on: 'ソウ, ショウ', kun: 'あい-', en: 'mutual, together' }, { char: '顔', on: 'ガン', kun: 'かお', en: 'face' }, { char: '怒', on: 'ド', kun: 'いか.る, おこ.る', en: 'angry, be offended' } ] }];
+    const lessons = [{ name: "Lesson 22", kanji: [ { char: '記', on: 'キ', kun: 'しる(す)', en: 'scribe, account' }, { char: '銀', on: 'ギン', kun: 'しろがね', en: 'silver' }, { char: '回', on: 'カイ', kun: 'まわ(る)', en: 'times, round' }, { char: '夕', on: 'セキ', kun: 'ゆう', en: 'evening' }, { char: '黒', on: 'コク', kun: 'くろ', en: 'black' }, { char: '用', on: 'ヨウ', kun: 'もち(いる)', en: 'use, business' }, { char: '守', on: 'シュ, ス', kun: 'まも(る)', en: 'guard, protect' }, { char: '末', on: 'マツ', kun: 'すえ', en: 'end, close' }, { char: '待', on: 'タイ', kun: 'ま(つ)', en: 'wait' }, { char: '残', on: 'ザン', kun: 'のこ(る)', en: 'remainder, leave behind' }, { char: '番', on: 'バン', kun: 'つが(い)', en: 'turn, number in series' }, { char: '駅', on: 'エキ', kun: 'n/a', en: 'station' }, { char: '説', on: 'セツ', kun: 'と(く)', en: 'theory, explanation' }, { char: '案', on: 'アン', kun: 'つくえ', en: 'plan, suggestion' }, { char: '内', on: 'ナイ', kun: 'うち', en: 'inside, within' }, { char: '忘', on: 'ボウ', kun: 'わす(れる)', en: 'forget' } ] }, { name: "Lesson 23", kanji: [ { char: '調', on: 'チョウ', kun: 'しら(べる)', en: 'investigate, tune' }, { char: '化', on: 'カ, ケ', kun: 'ば(ける)', en: 'change, take form of' }, { char: '横', on: 'オウ', kun: 'よこ', en: 'sideways, side' }, { char: '比', on: 'ヒ', kun: 'くら(べる)', en: 'compare, ratio' }, { char: '感', on: 'カン', kun: 'n/a', en: 'feel, emotion' }, { char: '果', on: 'カ', kun: 'は(たす)', en: 'fruit, result' }, { char: '答', on: 'トウ', kun: 'こた(える)', en: 'solution, answer' }, { char: '変', on: 'ヘン', kun: 'か(わる)', en: 'unusual, change' }, { char: '情', on: 'ジョウ', kun: 'なさ(け)', en: 'feeling, passion' }, { char: '悲', on: 'ヒ', kun: 'かな(しい)', en: 'grieve, sad' }, { char: '査', on: 'サ', kun: 'n/a', en: 'investigate' }, { char: '違', on: 'イ', kun: 'ちが(う)', en: 'differ, violate' }, { char: '相', on: 'ソウ, ショウ', kun: 'あい-', en: 'mutual, together' }, { char: '顔', on: 'ガン', kun: 'かお', en: 'face' }, { char: '怒', on: 'ド', kun: 'いか(る), おこ(る)', en: 'angry, be offended' } ] }];
     const allKanji = lessons.flatMap(lesson => lesson.kanji);
     const DECK_STATE_KEY = 'kanjiDeckState';
     const LEARNING_BUFFER_SIZE = 5;
@@ -21,6 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('status-modal'); // MOVED to global scope
     let isDrawing = false, lastX = 0, lastY = 0;
     let countdownInterval = null; // MOVED to global scope
+    
+    // --- Helper Functions ---
+    const formatReading = (reading) => {
+        if (!reading || typeof reading !== 'string') return '';
+        // Replaces ".xyz" with "(xyz)" for better readability
+        return reading.replace(/\.([\w-]+)/g, '($1)');
+    };
 
     // --- Generic Drawing Functions ---
     const getCoords = (canvas, e) => {
@@ -86,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
             guideCtx.fillText(kanjiData.char, guideCanvas.width / 2, guideCanvas.height / 2); 
             kanjiInfo.textContent = `${lesson.name}: ${kanjiData.char}`; 
             onReading.textContent = kanjiData.on; 
-            kunReading.textContent = kanjiData.kun; 
+            kunReading.textContent = formatReading(kanjiData.kun); // CHANGED
             enMeaning.textContent = kanjiData.en; 
             kanjiSelect.value = `${currentLessonIndex}-${currentKanjiInLessonIndex}`; 
         };
@@ -214,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const nextKanjiChar = state.learning[0]; 
             currentKanji = allKanji.find(k => k.char === nextKanjiChar); 
             onDisplay.textContent = currentKanji.on; 
-            kunDisplay.textContent = currentKanji.kun; 
+            kunDisplay.textContent = formatReading(currentKanji.kun); // CHANGED
             enDisplay.textContent = currentKanji.en; 
             revealBtn.style.display = '';
             ratingButtons.style.display = 'none'; 
@@ -237,17 +244,29 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Reading Quiz Mode ---
     const readingQuiz = (() => {
         const checkbox = document.getElementById('hard-mode-checkbox'), instruction = document.getElementById('reading-q-instruction'), promptEl = document.getElementById('reading-q-prompt'), answerArea = document.getElementById('reading-q-answer-area'), feedbackArea = document.getElementById('reading-q-feedback-area'), checkBtn = document.getElementById('reading-q-check-btn'), nextBtn = document.getElementById('reading-q-next-btn');
-        let isHardMode = false, questionPool = [], currentQuestion = null;
+        let isHardMode = false, questionPool = [], currentQuestion = null, isChecking = false;
+        
+        const katakanaToHiragana = (str) => {
+            if (!str || typeof str !== 'string') return '';
+            return str.replace(/[\u30a1-\u30f6]/g, (match) => {
+                const chr = match.charCodeAt(0) - 0x60;
+                return String.fromCharCode(chr);
+            });
+        };
+
         const generateQuestionPool = () => { const pool = []; allKanji.forEach(kanji => { if (kanji.on !== 'n/a') pool.push({ type: 'kanjiToReading', prompt: kanji.char, answer: kanji.on }); if (kanji.kun !== 'n/a') pool.push({ type: 'kanjiToReading', prompt: kanji.char, answer: kanji.kun }); kanji.on.split(', ').forEach(on => { if (on !== 'n/a') pool.push({ type: 'readingToKanji', prompt: on, answer: kanji.char }); }); kanji.kun.split(', ').forEach(kun => { if (kun !== 'n/a') pool.push({ type: 'readingToKanji', prompt: kun, answer: kanji.char }); }); }); return pool; };
         const getDistractors = (type, answer) => { const distractors = new Set(); const source = type === 'kanjiToReading' ? [...new Set(allKanji.flatMap(k => [k.on, k.kun]))].filter(r => r !== 'n/a' && r) : allKanji.map(k => k.char); while (distractors.size < 3) { const randomItem = source[Math.floor(Math.random() * source.length)]; if (randomItem !== answer) { distractors.add(randomItem); } } return [...distractors]; };
+        
         const renderQuestion = () => { 
+            isChecking = false;
             instruction.textContent = currentQuestion.type === 'kanjiToReading' ? 'What is a reading for this Kanji?' : 'What is the Kanji for this reading?'; 
             promptEl.textContent = currentQuestion.prompt; 
             answerArea.innerHTML = ''; 
             feedbackArea.innerHTML = ''; 
             nextBtn.style.display = 'none'; 
+            checkBtn.style.display = 'none';
+
             if (isHardMode) { 
-                checkBtn.style.display = 'inline-block';
                 const input = document.createElement('input'); 
                 input.type = 'text'; 
                 input.id = 'reading-q-input'; 
@@ -256,26 +275,60 @@ document.addEventListener('DOMContentLoaded', () => {
                 answerArea.appendChild(input); 
                 input.focus(); 
             } else { 
-                checkBtn.style.display = 'none'; // Hide check button in multi-choice
                 const choices = [currentQuestion.answer, ...getDistractors(currentQuestion.type, currentQuestion.answer)]; 
                 choices.sort(() => Math.random() - 0.5); 
                 choices.forEach(choice => { 
                     const btn = document.createElement('button'); 
                     btn.className = 'choice-btn'; 
-                    btn.textContent = choice; 
-                    btn.onclick = () => checkAnswer(choice); 
+                    btn.textContent = formatReading(choice); 
+                    btn.onclick = (e) => checkAnswer(choice, e.target); 
                     answerArea.appendChild(btn); 
                 }); 
             } 
         };
-        const checkAnswer = (userAnswer) => { 
-            const correctAnswers = currentQuestion.answer.replace(/\.[\w-]+/g, '').split(', '); 
-            const isCorrect = correctAnswers.some(ans => ans.trim().toLowerCase() === userAnswer.trim().toLowerCase()); 
-            if (isCorrect) { 
-                feedbackArea.innerHTML = '<p class="correct-feedback">Correct!</p>'; 
-                if (window.playerDataManager) { 
-                    window.playerDataManager.rewardXp(isHardMode ? 'kanjiReadingCorrectHard' : 'kanjiReadingCorrectNormal'); 
-                    window.playerDataManager.increaseStat('kanjiReadingCorrect', 1); 
+
+        const checkAnswer = (userAnswerRaw, selectedBtn = null) => {
+            if (isChecking) return;
+            isChecking = true;
+        
+            // NEW: Get all possible correct answers for the current question.
+            let allCorrectAnswersString = currentQuestion.answer;
+            let allCorrectAnswersForFeedback = [currentQuestion.answer];
+        
+            // If it's a kanji-to-reading question, find all readings (on and kun).
+            if (currentQuestion.type === 'kanjiToReading') {
+                const kanjiData = allKanji.find(k => k.char === currentQuestion.prompt);
+                if (kanjiData) {
+                    const allReadings = [];
+                    if (kanjiData.on && kanjiData.on !== 'n/a') allReadings.push(kanjiData.on);
+                    if (kanjiData.kun && kanjiData.kun !== 'n/a') allReadings.push(kanjiData.kun);
+                    
+                    allCorrectAnswersString = allReadings.join(', ');
+                    allCorrectAnswersForFeedback = allReadings;
+                }
+            }
+        
+            // Create a set of correct answers, normalized for checking.
+            const acceptedHiraganaAnswers = new Set();
+            allCorrectAnswersString.split(', ').forEach(ans => {
+                const cleanAns = ans.trim().replace(/[().-]/g, ''); // Handles okurigana and prefixes
+                if (cleanAns !== 'n/a' && cleanAns) {
+                    acceptedHiraganaAnswers.add(katakanaToHiragana(cleanAns));
+                }
+            });
+        
+            // Normalize the user's answer the same way for a fair comparison.
+            const cleanUserAnswer = userAnswerRaw.trim().replace(/[().-]/g, '');
+            const userHiraganaAnswer = katakanaToHiragana(cleanUserAnswer);
+            
+            // The correctness check is now based on the normalized hiragana strings.
+            const isCorrect = acceptedHiraganaAnswers.has(userHiraganaAnswer);
+        
+            // --- Scoring logic (remains the same) ---
+            if (isCorrect) {
+                if (window.playerDataManager) {
+                    window.playerDataManager.rewardXp(isHardMode ? 'kanjiReadingCorrectHard' : 'kanjiReadingCorrectNormal');
+                    window.playerDataManager.increaseStat('kanjiReadingCorrect', 1);
                     if (isHardMode) window.playerDataManager.increaseStat('kanjiReadingHardModeCorrect', 1);
                     window.playerDataManager.increaseStat('kanjiReadingStreak', 1);
                     const currentStreak = window.playerDataManager.getData().stats.kanjiReadingStreak || 0;
@@ -286,24 +339,59 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (currentQuestion.prompt === '銀' || currentQuestion.answer === '銀') {
                         window.playerDataManager.setStat('kanjiSecretSilverFound', 1);
                     }
-                } 
-            } else { 
-                feedbackArea.innerHTML = `<p class="incorrect-feedback">Incorrect. The correct answer is: ${currentQuestion.answer}</p>`; 
+                }
+            } else {
                 if (window.playerDataManager) {
+                    window.playerDataManager.rewardXp(isHardMode ? 'kanjiReadingIncorrectHardAttempt' : 'kanjiReadingIncorrectNormalAttempt');
                     window.playerDataManager.setStat('kanjiReadingStreak', 0);
                     window.playerDataManager.increaseStat('kanjiReadingMistakes', 1);
                 }
-            } 
-            if (isHardMode) { 
-                checkBtn.style.display = 'none'; 
-            } else { 
-                answerArea.querySelectorAll('.choice-btn').forEach(btn => btn.disabled = true);
-            } 
-            nextBtn.style.display = 'inline-block'; 
+            }
+        
+            // --- Feedback logic (modified to show all answers) ---
+            if (isHardMode) {
+                const input = document.getElementById('reading-q-input');
+                if (input) {
+                    input.disabled = true;
+                    input.classList.add(isCorrect ? 'correct' : 'incorrect');
+                }
+                if (!isCorrect) {
+                    const feedbackText = allCorrectAnswersForFeedback.map(formatReading).join(', ');
+                    feedbackArea.innerHTML = `<p class="incorrect-feedback">Answer: ${feedbackText}</p>`;
+                }
+            } else { // Multiple Choice
+                const choiceBtns = answerArea.querySelectorAll('.choice-btn');
+                choiceBtns.forEach(btn => btn.disabled = true);
+                
+                const formattedCorrectAnswers = allCorrectAnswersForFeedback.map(formatReading);
+                choiceBtns.forEach(btn => {
+                    if (formattedCorrectAnswers.includes(btn.textContent)) {
+                        btn.classList.add('correct');
+                    }
+                });
+                
+                if (!isCorrect && selectedBtn) {
+                    selectedBtn.classList.add('incorrect');
+                }
+            }
+            
+            setTimeout(loadQuestion, isCorrect ? 1000 : 2000);
         };
+
         const loadQuestion = () => { if (questionPool.length === 0) { questionPool = generateQuestionPool(); } currentQuestion = questionPool[Math.floor(Math.random() * questionPool.length)]; renderQuestion(); };
+        
         return {
-            init: () => { checkbox.addEventListener('change', (e) => { isHardMode = e.target.checked; loadQuestion(); }); checkBtn.addEventListener('click', () => { if (isHardMode) { const input = document.getElementById('reading-q-input'); if (input.value) { checkAnswer(input.value); } } }); answerArea.addEventListener('keypress', function(e) { if (e.key === 'Enter' && isHardMode) { const input = document.getElementById('reading-q-input'); if (input.value) { checkBtn.click(); } } }); nextBtn.addEventListener('click', loadQuestion); },
+            init: () => { 
+                checkbox.addEventListener('change', (e) => { isHardMode = e.target.checked; loadQuestion(); }); 
+                answerArea.addEventListener('keypress', function(e) { 
+                    if (e.key === 'Enter' && isHardMode) { 
+                        const input = document.getElementById('reading-q-input'); 
+                        if (input && input.value) { 
+                            checkAnswer(input.value); 
+                        } 
+                    } 
+                });
+            },
             loadQuestion
         };
     })();
@@ -344,3 +432,4 @@ document.addEventListener('DOMContentLoaded', () => {
     handleResponsiveLayout();
     switchToMode(practiceContainer, practiceModeBtn);
 });
+

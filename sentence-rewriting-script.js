@@ -260,6 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
             feedbackCard.innerHTML = `Not quite. Correct answer: <strong>${primaryCorrectAnswer}</strong>`;
 
             if (playerData) {
+                playerData.rewardXp('sentenceRewritingIncorrectAttempt'); // Reward half XP for the attempt
                 playerData.increaseStat('sentenceRewritingMistakes', 1);
                 playerData.setStat('sentenceRewritingStreak', 0); // Reset streak
             }

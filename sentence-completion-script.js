@@ -289,6 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
             feedbackCard.innerHTML = `Not quite. The correct answer was: ${correctAnswersHtml}`;
 
             if (window.playerDataManager) {
+                window.playerDataManager.rewardXp('sentenceCompletionIncorrectAttempt'); // Reward half XP for the attempt
                 window.playerDataManager.increaseStat('sentenceCompletionMistakes', 1);
                 window.playerDataManager.setStat('sentenceCompletionStreak', 0);
             }

@@ -144,12 +144,27 @@ button:disabled { background-color: #ced4da; cursor: not-allowed; }
 #reading-q-instruction { margin: 0; color: var(--subtle-text-color); }
 #reading-q-prompt { font-size: 3rem; margin: 0.5rem 0 0 0; font-weight: 600; }
 #reading-q-answer-area { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.5rem; }
-#reading-q-answer-area .choice-btn { width: 100%; background-color: var(--card-alt-bg-color); color: var(--text-color); border: 1px solid var(--border-color); }
+#reading-q-answer-area .choice-btn { width: 100%; background-color: var(--card-alt-bg-color); color: var(--text-color); border: 1px solid var(--border-color); transition: background-color 0.2s, border-color 0.2s, color 0.2s; }
 #reading-q-answer-area .choice-btn:hover { background-color: var(--border-color); }
-#reading-q-answer-area input { width: 100%; grid-column: 1 / -1; padding: 1rem; font-size: 1.2rem; text-align: center; border: 2px solid var(--border-color); border-radius: 8px; box-sizing: border-box; background-color: var(--card-bg-color); color: var(--text-color); }
+#reading-q-answer-area input { width: 100%; grid-column: 1 / -1; padding: 1rem; font-size: 1.2rem; text-align: center; border: 2px solid var(--border-color); border-radius: 8px; box-sizing: border-box; background-color: var(--card-bg-color); color: var(--text-color); transition: background-color 0.2s, border-color 0.2s, color 0.2s;}
 #reading-q-feedback-area { min-height: 50px; margin-bottom: 1.5rem; font-size: 1.2rem; font-weight: 500; }
 .correct-feedback { color: #28a745; }
 .incorrect-feedback { color: #dc3545; }
+
+/* ADDED: Visual feedback styles for reading quiz answers */
+#reading-q-answer-area .choice-btn.correct,
+#reading-q-answer-area input.correct {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+#reading-q-answer-area .choice-btn.incorrect,
+#reading-q-answer-area input.incorrect {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
 
 /* --- Modal Styles --- */
 .modal {
@@ -203,6 +218,22 @@ button:disabled { background-color: #ced4da; cursor: not-allowed; }
     --interactive-hover-color: #55aaff; 
     --card-alt-bg-color: #282828; 
 }
+
+/* ADDED: Dark mode styles for visual feedback */
+:root.dark-mode #reading-q-answer-area .choice-btn.correct,
+:root.dark-mode #reading-q-answer-area input.correct {
+    background-color: #1c3c24;
+    border-color: #28a745;
+    color: #d4edda;
+}
+
+:root.dark-mode #reading-q-answer-area .choice-btn.incorrect,
+:root.dark-mode #reading-q-answer-area input.incorrect {
+    background-color: #4a1e22;
+    border-color: #dc3545;
+    color: #f8d7da;
+}
+
 :root.dark-mode .level-display { color: #bbbbbb; }
 :root.dark-mode .title-item.equipped { background-color: rgba(51, 145, 255, 0.15); }
 :root.dark-mode #clear-timers-btn { background-color: #5a2a2e; color: #f5c6cb; border-color: #8c3a41; }
@@ -338,4 +369,3 @@ button:disabled { background-color: #ced4da; cursor: not-allowed; }
         flex-basis: 45%;
     }
 }
-

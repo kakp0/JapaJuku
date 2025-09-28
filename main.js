@@ -19,23 +19,29 @@
     // --- NEW: Centralized BASE XP Rewards Configuration ---
     // These are the base XP values for Level 1. They will scale with the player's level.
     const baseXpRewards = {
-        // Kanji Practice (Values are ready for when you implement this)
+        // Kanji Practice
         kanjiPracticeGrade: 0.3,
         kanjiQuizRateAnswer: 15,
         kanjiReadingCorrectNormal: 5,
         kanjiReadingCorrectHard: 8,
+        kanjiReadingIncorrectNormalAttempt: 2.5, // NEW: Half XP for incorrect normal reading
+        kanjiReadingIncorrectHardAttempt: 4,    // NEW: Half XP for incorrect hard reading
 
         // Conjugation Practice
         conjugationCorrect: 10,
+        conjugationIncorrectAttempt: 5,         // NEW: Half XP for incorrect conjugation
 
         // Sentence Completion
         sentenceCompletionCorrect: 15,
+        sentenceCompletionIncorrectAttempt: 7.5, // NEW: Half XP for incorrect sentence completion
 
         // Sentence Rewriting
         sentenceRewritingCorrect: 12,
+        sentenceRewritingIncorrectAttempt: 6,     // NEW: Half XP for incorrect sentence rewriting
 
         // Sentence Translation
         sentenceTranslationCorrect: 10,
+        sentenceTranslationIncorrectAttempt: 5,   // NEW: Half XP for incorrect sentence translation
 
         // Written Passage (XP awarded for every 5 characters written)
         passageCharactersWritten: 5,
@@ -870,4 +876,3 @@
         window.playerDataManager = playerDataManager;
     });
 })();
-

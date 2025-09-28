@@ -188,6 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
             feedbackCard.innerHTML = `Not quite. Correct answer: <strong>${possibleAnswers[0]}</strong>`;
 
             if (playerData) {
+                playerData.rewardXp('sentenceTranslationIncorrectAttempt'); // Reward half XP for the attempt
                 playerData.increaseStat('sentenceTranslationMistakes', 1);
                 playerData.setStat('sentenceTranslationStreak', 0);
             }
@@ -230,4 +231,3 @@ document.addEventListener('DOMContentLoaded', () => {
     loadNewQuestion();
     handleResponsiveLayout();
 });
-
