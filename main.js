@@ -21,7 +21,7 @@
     const baseXpRewards = {
         // Kanji Practice
         kanjiPracticeGrade: 0.3,
-        kanjiQuizRateAnswer: 15,
+        kanjiQuizRateAnswer: 10,
         kanjiReadingCorrectNormal: 5,
         kanjiReadingCorrectHard: 8,
         kanjiReadingIncorrectNormalAttempt: 2.5, // NEW: Half XP for incorrect normal reading
@@ -879,3 +879,4 @@
         window.playerDataManager = playerDataManager;
     });
 })();
+
