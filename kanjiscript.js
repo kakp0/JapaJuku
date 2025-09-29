@@ -255,7 +255,25 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const generateQuestionPool = () => { const pool = []; allKanji.forEach(kanji => { if (kanji.on !== 'n/a') pool.push({ type: 'kanjiToReading', prompt: kanji.char, answer: kanji.on }); if (kanji.kun !== 'n/a') pool.push({ type: 'kanjiToReading', prompt: kanji.char, answer: kanji.kun }); kanji.on.split(', ').forEach(on => { if (on !== 'n/a') pool.push({ type: 'readingToKanji', prompt: on, answer: kanji.char }); }); kanji.kun.split(', ').forEach(kun => { if (kun !== 'n/a') pool.push({ type: 'readingToKanji', prompt: kun, answer: kanji.char }); }); }); return pool; };
-        const getDistractors = (type, answer) => { const distractors = new Set(); const source = type === 'kanjiToReading' ? [...new Set(allKanji.flatMap(k => [k.on, k.kun]))].filter(r => r !== 'n/a' && r) : allKanji.map(k => k.char); while (distractors.size < 3) { const randomItem = source[Math.floor(Math.random() * source.length)]; if (randomItem !== answer) { distractors.add(randomItem); } } return [...distractors]; };
+        
+        const getDistractors = (type, answer) => {
+            const distractors = new Set();
+            // Create a set of all valid answers for the current question to avoid picking them as distractors.
+            const allCorrectAnswers = new Set(answer.split(', '));
+            const source = type === 'kanjiToReading' 
+                ? [...new Set(allKanji.flatMap(k => [k.on, k.kun]))].filter(r => r !== 'n/a' && r) 
+                : allKanji.map(k => k.char);
+        
+            while (distractors.size < 3) {
+                const randomItem = source[Math.floor(Math.random() * source.length)];
+                // Check if the random item is one of the correct answers for the current prompt.
+                // This prevents a correct reading from appearing as a "wrong" choice.
+                if (!allCorrectAnswers.has(randomItem)) {
+                    distractors.add(randomItem);
+                }
+            }
+            return [...distractors];
+        };
         
         const renderQuestion = () => { 
             isChecking = false;
@@ -275,7 +293,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 answerArea.appendChild(input); 
                 input.focus(); 
             } else { 
-                const choices = [currentQuestion.answer, ...getDistractors(currentQuestion.type, currentQuestion.answer)]; 
+                // When the answer has multiple parts (e.g., "シュ, ス"), only use the first part for the button.
+                // The checkAnswer function is smart enough to accept any correct part.
+                const mainAnswer = currentQuestion.answer.split(', ')[0];
+                const choices = [mainAnswer, ...getDistractors(currentQuestion.type, currentQuestion.answer)]; 
                 choices.sort(() => Math.random() - 0.5); 
                 choices.forEach(choice => { 
                     const btn = document.createElement('button'); 
@@ -291,7 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isChecking) return;
             isChecking = true;
         
-            // NEW: Get all possible correct answers for the current question.
+            // Get all possible correct answers for the current question.
             let allCorrectAnswersString = currentQuestion.answer;
             let allCorrectAnswersForFeedback = [currentQuestion.answer];
         
@@ -321,10 +342,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const cleanUserAnswer = userAnswerRaw.trim().replace(/[().-]/g, '');
             const userHiraganaAnswer = katakanaToHiragana(cleanUserAnswer);
             
-            // The correctness check is now based on the normalized hiragana strings.
+            // The correctness check is based on the normalized hiragana strings.
             const isCorrect = acceptedHiraganaAnswers.has(userHiraganaAnswer);
         
-            // --- Scoring logic (remains the same) ---
+            // --- Scoring logic ---
             if (isCorrect) {
                 if (window.playerDataManager) {
                     window.playerDataManager.rewardXp(isHardMode ? 'kanjiReadingCorrectHard' : 'kanjiReadingCorrectNormal');
@@ -348,7 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         
-            // --- Feedback logic (modified to show all answers) ---
+            // --- Feedback logic ---
             if (isHardMode) {
                 const input = document.getElementById('reading-q-input');
                 if (input) {
@@ -365,7 +386,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 const formattedCorrectAnswers = allCorrectAnswersForFeedback.map(formatReading);
                 choiceBtns.forEach(btn => {
-                    if (formattedCorrectAnswers.includes(btn.textContent)) {
+                    // Normalize button text for comparison with potentially compound answers
+                    const btnAnswers = btn.textContent.split(', ').map(t => t.trim());
+                    const isCorrectButton = btnAnswers.some(t => formattedCorrectAnswers.flat().includes(t));
+
+                    if (isCorrectButton) {
                         btn.classList.add('correct');
                     }
                 });
@@ -432,4 +457,3 @@ document.addEventListener('DOMContentLoaded', () => {
     handleResponsiveLayout();
     switchToMode(practiceContainer, practiceModeBtn);
 });
-
